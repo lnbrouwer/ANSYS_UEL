@@ -94,8 +94,8 @@ __________________________________
 __________________________________
 
 L. Brouwer, D. Arbelaez, B. Auchmann, L. Bortot, and E. Stubberud, "User Defined
-Elements in ANSYS for 2D Multiphysics Modeling of Superconducting Magnets," 2019,
-submitted to Superconductor Science and Technology.
+Elements in ANSYS for 2D Multiphysics Modeling of Superconducting Magnets,"
+Supercond. Sci. Technol., 32, 095011, 2019
 
 
 
