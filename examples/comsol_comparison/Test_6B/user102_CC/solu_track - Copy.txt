@@ -1,0 +1,699 @@
+
+ *DO LOOP ON PARAMETER= I FROM  1.0000     TO  50.000     BY  1.0000    
+
+ TIME= 0.20000E-01
+
+ USE     1 SUBSTEP(S) THIS LOAD STEP FOR ALL  DEGREES OF FREEDOM
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+                       S O L U T I O N   O P T I O N S
+
+   PROBLEM DIMENSIONALITY. . . . . . . . . . . . .2-D                  
+   DEGREES OF FREEDOM. . . . . . AZ   VOLT EMF  CURR
+   ANALYSIS TYPE . . . . . . . . . . . . . . . . .STATIC (STEADY-STATE)
+   ELECTRO-MAGNETIC UNITS. . . . . . . . . . . . .MKS          
+      MUZERO . . . . . . . . . . . . . . . . . . . 0.12566E-05
+   NEWTON-RAPHSON OPTION . . . . . . . . . . . . .PROGRAM CHOSEN   
+   GLOBALLY ASSEMBLED MATRIX . . . . . . . . . . .UNSYMMETRIC
+
+ *** WARNING ***                         CP =     308.898   TIME= 13:57:08
+ Final slope ( 1.256042399E-06 ) of B-H curve for material 4 is less     
+ than free space permeability.                                           
+
+ *** NOTE ***                            CP =     308.898   TIME= 13:57:08
+ The step data was checked and warning messages were found.              
+  Please review output or errors file (                                  
+ D:\ansys_UDF_dist_v1\CERN_benchmarking_v10\Test_5_for_paper\Test_5A_tes 
+ stmulti\user102_CC\udf_dipole.err ) for these warning messages.         
+
+ *** NOTE ***                            CP =     308.898   TIME= 13:57:08
+ The Solution Control Option is only valid for single field structural,  
+ single field thermal and coupled-field analyses with structural         
+ degrees of freedom.  The SOLCONTROL,ON command (if present) has been    
+ de-activated.                                                           
+
+ *** NOTE ***                            CP =     308.898   TIME= 13:57:08
+ This nonlinear analysis defaults to using the full Newton-Raphson       
+ solution procedure.  This can be modified using the NROPT command.      
+
+                      L O A D   S T E P   O P T I O N S
+
+   LOAD STEP NUMBER. . . . . . . . . . . . . . . .     1
+   TIME AT END OF THE LOAD STEP. . . . . . . . . . 0.20000E-01
+   NUMBER OF SUBSTEPS. . . . . . . . . . . . . . .     1
+   MAXIMUM NUMBER OF EQUILIBRIUM ITERATIONS. . . .    25
+   STEP CHANGE BOUNDARY CONDITIONS . . . . . . . .    NO
+   TERMINATE ANALYSIS IF NOT CONVERGED . . . . . .YES (EXIT)  
+   CONVERGENCE CONTROLS. . . . . . . . . . . . . .USE DEFAULTS
+   PRINT OUTPUT CONTROLS . . . . . . . . . . . . .NO PRINTOUT
+   DATABASE OUTPUT CONTROLS
+      ITEM     FREQUENCY   COMPONENT
+       ALL        ALL               
+       ALL       NONE               
+      ESOL       LAST       ESOLU   
+      NSOL       LAST       NSOLU   
+
+
+ Element Formation Element= 1000 Cum.  Iter.= 1 CP= 309.896              
+  Time= 0.20000E-01 Load Step= 1 Substep= 1 Equilibrium Iteration= 1.    
+
+ *** WARNING ***                         CP =     310.426   TIME= 13:57:09
+ This data file is using at least one element type that has not been     
+ verified by the ANSYS, Inc.  Quality Assurance Department.              
+
+ Range of element maximum matrix coefficients in global coordinates
+ Maximum = 7267776.6 at element 11423.                                   
+ Minimum = 1.E-30 at element 22478.                                      
+
+ *** WARNING ***                         CP =     310.442   TIME= 13:57:09
+ Coefficient ratio exceeds 1.0e8 - Check results.                        
+
+   *** ELEMENT MATRIX FORMULATION TIMES
+  TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+     1     15597  PLANE53       0.936   0.000060
+     2      6880  USER102       0.437   0.000063
+     3         1  CIRCU124      0.000   0.000000
+     5         1  CIRCU124      0.000   0.000000
+     6         1  CIRCU124      0.000   0.000000
+ Time at end of element matrix formulation CP = 310.441986.              
+
+ ALL CURRENT ANSYS DATA WRITTEN TO FILE NAME= udf_dipole.rdb
+  FOR POSSIBLE RESUME FROM THIS POINT
+     CUR SEG CONVERGENCE VALUE=  0.000      CRITERION=  0.000    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION= 0.4525    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+
+ SPARSE MATRIX DIRECT SOLVER.
+  Number of equations =       67391,    Maximum wavefront =    104
+  Memory allocated for solver =        2487.333 MB
+  Memory required for in-core =         117.872 MB
+  Memory required for out-of-core =      28.312 MB
+
+
+ *** NOTE ***                            CP =     312.142   TIME= 13:57:11
+ The Sparse Matrix solver is currently running in the in-core memory     
+ mode.  This memory mode uses the most amount of memory in order to      
+ avoid using the hard drive as much as possible, which most often        
+ results in the fastest solution time.  This mode is recommended if      
+ enough physical memory is present to accommodate all of the solver      
+ data.                                                                   
+
+ *** WARNING ***                         CP =     312.142   TIME= 13:57:11
+ Pivoting has been activated for the Sparse Matrix solver.  The memory   
+ required may greatly exceed the predicted amount.  In that event, use   
+ the BCSOPTION command to change the memory mode and/or memory size      
+ used by the Sparse Matrix solver.                                       
+
+ *** NOTE ***                            CP =     312.142   TIME= 13:57:11
+ The system matrix is unsymmetric.                                       
+ curEqn=  33701  totEqn=  67391 Job CP sec=    312.439
+      Factor Done=  55% Factor Wall sec=      0.111 rate=    7936.8 Mflops
+ curEqn=  67391  totEqn=  67391 Job CP sec=    312.657
+      Factor Done= 100% Factor Wall sec=      0.227 rate=    7045.3 Mflops
+ Sparse solver maximum pivot= 1.26375E+16 at node 1 CURR.                
+ Sparse solver minimum pivot= -0.791295747 at node 1 EMF.                
+ Sparse solver minimum pivot in absolute value= 0 at node 67788 VOLT.    
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.6006      CRITERION= 0.9349     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION= 0.4525     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+
+   *** ELEMENT RESULT CALCULATION TIMES
+  TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+     1     15597  PLANE53       0.562   0.000036
+     2      6880  USER102       0.187   0.000027
+     3         1  CIRCU124      0.000   0.000000
+     5         1  CIRCU124      0.000   0.000000
+     6         1  CIRCU124      0.000   0.000000
+
+   *** NODAL LOAD CALCULATION TIMES
+  TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+     1     15597  PLANE53       0.062   0.000004
+     2      6880  USER102       0.031   0.000005
+     3         1  CIRCU124      0.000   0.000000
+     5         1  CIRCU124      0.000   0.000000
+     6         1  CIRCU124      0.000   0.000000
+ *** LOAD STEP     1   SUBSTEP     1  COMPLETED.    CUM ITER =      1
+ *** TIME =  0.200000E-01     TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     314.326   TIME= 13:57:12
+ Solution is done!                                                       
+
+
+ *** ANSYS BINARY FILE STATISTICS
+  BUFFER SIZE USED= 16384
+       49.312 MB WRITTEN ON ELEMENT MATRIX FILE: udf_dipole.emat
+       24.625 MB WRITTEN ON ELEMENT SAVED DATA FILE: udf_dipole.esav
+       31.312 MB WRITTEN ON ASSEMBLED MATRIX FILE: udf_dipole.full
+       13.125 MB WRITTEN ON RESULTS FILE: udf_dipole.rst
+
+ *ENDDO  INDEX= I                               
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.6006      CRITERION= 0.9349    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION= 0.9051    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    317.010
+      Factor Done=  50% Factor Wall sec=      0.192 rate=    8332.7 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.6563E-01  CRITERION=  1.869     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION= 0.9051     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     2   SUBSTEP     1  COMPLETED.    CUM ITER =      2
+ *** TIME =  0.400000E-01     TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     318.414   TIME= 13:57:14
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.6563E-01  CRITERION=  1.869    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  1.358    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    321.175
+      Factor Done=  50% Factor Wall sec=      0.210 rate=    7594.2 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.2578E-01  CRITERION=  2.804     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  1.358     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     3   SUBSTEP     1  COMPLETED.    CUM ITER =      3
+ *** TIME =  0.600000E-01     TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     322.641   TIME= 13:57:16
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.2578E-01  CRITERION=  2.804    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  1.810    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    325.356
+      Factor Done=  50% Factor Wall sec=      0.191 rate=    8378.8 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.2569E-01  CRITERION=  3.739     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  1.810     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     4   SUBSTEP     1  COMPLETED.    CUM ITER =      4
+ *** TIME =  0.800000E-01     TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     326.775   TIME= 13:57:18
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.2569E-01  CRITERION=  3.739    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  2.263    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    329.505
+      Factor Done=  50% Factor Wall sec=      0.190 rate=    8425.9 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+ Element Formation Element= 1000 Cum.  Iter.= 6 CP= 329.817              
+  Time= 0.10000 Load Step= 5 Substep= 1 Equilibrium Iteration= 2.        
+ CSEG Convergence Norm= 0.25687E-01  Previous Norm= 0.25687E-01
+ CURR Convergence Norm=  452.55      Previous Norm=  452.55    
+     CUR SEG CONVERGENCE VALUE= 0.3007E-01  CRITERION=  4.673     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  2.263     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     5   SUBSTEP     1  COMPLETED.    CUM ITER =      5
+ *** TIME =  0.100000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     330.925   TIME= 13:57:20
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.3007E-01  CRITERION=  4.673    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  2.715    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    333.608
+      Factor Done=  50% Factor Wall sec=      0.212 rate=    7550.6 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.5042E-01  CRITERION=  5.608     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  2.715     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     6   SUBSTEP     1  COMPLETED.    CUM ITER =      6
+ *** TIME =  0.120000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     335.012   TIME= 13:57:22
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.5042E-01  CRITERION=  5.608    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  3.168    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    337.758
+      Factor Done=  50% Factor Wall sec=      0.191 rate=    8369.0 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.1355      CRITERION=  6.543     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  3.168     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     7   SUBSTEP     1  COMPLETED.    CUM ITER =      7
+ *** TIME =  0.140000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     339.193   TIME= 13:57:25
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.1355      CRITERION=  6.543    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  3.620    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    341.923
+      Factor Done=  50% Factor Wall sec=      0.189 rate=    8444.6 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.2196      CRITERION=  7.477     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  3.620     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     8   SUBSTEP     1  COMPLETED.    CUM ITER =      8
+ *** TIME =  0.160000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     343.530   TIME= 13:57:27
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.2196      CRITERION=  7.477    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  4.073    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    346.260
+      Factor Done=  50% Factor Wall sec=      0.199 rate=    8050.6 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE=  2.590      CRITERION=  8.411     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  4.073     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     9   SUBSTEP     1  COMPLETED.    CUM ITER =      9
+ *** TIME =  0.180000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     347.711   TIME= 13:57:29
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  2.590      CRITERION=  8.411    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  4.525    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    350.394
+      Factor Done=  50% Factor Wall sec=      0.191 rate=    8353.8 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+ Element Formation Element= 1000 Cum.  Iter.= 11 CP= 350.737             
+  Time= 0.20000 Load Step= 10 Substep= 1 Equilibrium Iteration= 2.       
+ CSEG Convergence Norm=  2.5903      Previous Norm=  2.5903    
+ CURR Convergence Norm=  452.55      Previous Norm=  452.55    
+     CUR SEG CONVERGENCE VALUE=  27.77      CRITERION=  9.342    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  4.525     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+ curEqn=  67391  totEqn=  67391 Job CP sec=    352.297
+      Factor Done=  50% Factor Wall sec=      0.201 rate=    7959.9 Mflops
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1137E-02
+     CUR SEG CONVERGENCE VALUE=  25.34      CRITERION=  9.336    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  4.525     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+ curEqn=  67391  totEqn=  67391 Job CP sec=    354.153
+      Factor Done=  50% Factor Wall sec=      0.196 rate=    8136.6 Mflops
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1635E-03
+     CUR SEG CONVERGENCE VALUE=  2.035      CRITERION=  9.336     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  4.525     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+ *** LOAD STEP    10   SUBSTEP     1  COMPLETED.    CUM ITER =     12
+ *** TIME =  0.200000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     355.604   TIME= 13:57:33
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  2.035      CRITERION=  9.336    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  4.978    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    358.334
+      Factor Done=  50% Factor Wall sec=      0.193 rate=    8294.3 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE=  22.05      CRITERION=  10.25    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  4.978     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+ curEqn=  67391  totEqn=  67391 Job CP sec=    360.191
+      Factor Done=  50% Factor Wall sec=      0.190 rate=    8421.7 Mflops
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3954E-03
+     CUR SEG CONVERGENCE VALUE=  5.992      CRITERION=  10.24     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  4.978     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP    11   SUBSTEP     1  COMPLETED.    CUM ITER =     14
+ *** TIME =  0.220000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     361.595   TIME= 13:57:36
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  5.992      CRITERION=  10.24    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  5.431    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    364.309
+      Factor Done=  50% Factor Wall sec=      0.191 rate=    8348.6 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE=  78.29      CRITERION=  11.14    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  5.431     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+ curEqn=  67391  totEqn=  67391 Job CP sec=    366.228
+      Factor Done=  50% Factor Wall sec=      0.199 rate=    8020.8 Mflops
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1343E-02
+     CUR SEG CONVERGENCE VALUE=  31.44      CRITERION=  11.14    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  5.431     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+ curEqn=  67391  totEqn=  67391 Job CP sec=    368.131
+      Factor Done=  50% Factor Wall sec=      0.196 rate=    8164.6 Mflops
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1859E-03
+     CUR SEG CONVERGENCE VALUE=  2.216      CRITERION=  11.14     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  5.431     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+ *** LOAD STEP    12   SUBSTEP     1  COMPLETED.    CUM ITER =     17
+ *** TIME =  0.240000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     369.566   TIME= 13:57:40
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  2.216      CRITERION=  11.14    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  5.883    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    372.265
+      Factor Done=  50% Factor Wall sec=      0.202 rate=    7920.3 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+ Element Formation Element= 1000 Cum.  Iter.= 19 CP= 372.593             
+  Time= 0.26000 Load Step= 13 Substep= 1 Equilibrium Iteration= 2.       
+ CSEG Convergence Norm=  2.2160      Previous Norm=  2.2160    
+ CURR Convergence Norm=  452.55      Previous Norm=  452.55    
+     CUR SEG CONVERGENCE VALUE=  69.38      CRITERION=  12.02    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  5.883     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+ curEqn=  67391  totEqn=  67391 Job CP sec=    374.137
+      Factor Done=  50% Factor Wall sec=      0.196 rate=    8143.1 Mflops
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.5605E-03
+     CUR SEG CONVERGENCE VALUE=  11.63      CRITERION=  12.01     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  5.883     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP    13   SUBSTEP     1  COMPLETED.    CUM ITER =     19
+ *** TIME =  0.260000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     375.557   TIME= 13:57:43
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  11.63      CRITERION=  12.01    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  6.336    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    378.334
+      Factor Done=  50% Factor Wall sec=      0.208 rate=    7690.0 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE=  94.86      CRITERION=  12.86    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  6.336     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+ curEqn=  67391  totEqn=  67391 Job CP sec=    380.299
+      Factor Done=  50% Factor Wall sec=      0.199 rate=    8045.0 Mflops
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3694E-03
+     CUR SEG CONVERGENCE VALUE=  10.94      CRITERION=  12.85     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  6.336     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP    14   SUBSTEP     1  COMPLETED.    CUM ITER =     21
+ *** TIME =  0.280000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     381.703   TIME= 13:57:46
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  10.94      CRITERION=  12.85    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  6.788    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    384.464
+      Factor Done=  50% Factor Wall sec=      0.202 rate=    7898.2 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE=  68.67      CRITERION=  13.67    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  6.788     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+ curEqn=  67391  totEqn=  67391 Job CP sec=    386.461
+      Factor Done=  50% Factor Wall sec=      0.203 rate=    7877.0 Mflops
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2271E-03
+     CUR SEG CONVERGENCE VALUE=  5.559      CRITERION=  13.66     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  6.788     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP    15   SUBSTEP     1  COMPLETED.    CUM ITER =     23
+ *** TIME =  0.300000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     387.881   TIME= 13:57:50
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  5.559      CRITERION=  13.66    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  7.241    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    390.502
+      Factor Done=  50% Factor Wall sec=      0.191 rate=    8375.6 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE=  48.04      CRITERION=  14.46    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  7.241     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+ curEqn=  67391  totEqn=  67391 Job CP sec=    392.483
+      Factor Done=  50% Factor Wall sec=      0.201 rate=    7965.4 Mflops
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1509E-03
+     CUR SEG CONVERGENCE VALUE=  3.329      CRITERION=  14.45     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  7.241     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ Element Output Element= 10000 Cum.  Iter.= 25 CP= 393.591               
+  Time= 0.32000 Load Step= 16 Substep= 1 Equilibrium Iteration= 2.       
+ CSEG Convergence Norm=  3.3286      Previous Norm=  48.043    
+ *** LOAD STEP    16   SUBSTEP     1  COMPLETED.    CUM ITER =     25
+ *** TIME =  0.320000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     393.903   TIME= 13:57:53
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  3.329      CRITERION=  14.45    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  7.693    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    396.555
+      Factor Done=  50% Factor Wall sec=      0.186 rate=    8604.1 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE=  36.33      CRITERION=  15.24    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  7.693     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+ curEqn=  67391  totEqn=  67391 Job CP sec=    398.473
+      Factor Done=  50% Factor Wall sec=      0.208 rate=    7699.5 Mflops
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1236E-03
+     CUR SEG CONVERGENCE VALUE=  2.589      CRITERION=  15.24     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  7.693     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP    17   SUBSTEP     1  COMPLETED.    CUM ITER =     27
+ *** TIME =  0.340000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     399.877   TIME= 13:57:56
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  2.589      CRITERION=  15.24    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  8.146    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    402.545
+      Factor Done=  50% Factor Wall sec=      0.197 rate=    8099.2 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE=  31.40      CRITERION=  16.02    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  8.146     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+ curEqn=  67391  totEqn=  67391 Job CP sec=    404.526
+      Factor Done=  50% Factor Wall sec=      0.193 rate=    8261.8 Mflops
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1209E-03
+     CUR SEG CONVERGENCE VALUE=  2.824      CRITERION=  16.02     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  8.146     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP    18   SUBSTEP     1  COMPLETED.    CUM ITER =     29
+ *** TIME =  0.360000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     405.961   TIME= 13:57:59
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  2.824      CRITERION=  16.02    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  8.598    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    408.691
+      Factor Done=  50% Factor Wall sec=      0.195 rate=    8180.1 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE=  30.10      CRITERION=  16.80    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  8.598     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+ curEqn=  67391  totEqn=  67391 Job CP sec=    410.579
+      Factor Done=  50% Factor Wall sec=      0.199 rate=    8029.4 Mflops
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1090E-03
+     CUR SEG CONVERGENCE VALUE=  3.941      CRITERION=  16.79     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  8.598     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP    19   SUBSTEP     1  COMPLETED.    CUM ITER =     31
+ *** TIME =  0.380000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     411.999   TIME= 13:58:02
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  3.941      CRITERION=  16.79    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  9.051    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    414.791
+      Factor Done=  50% Factor Wall sec=      0.212 rate=    7522.1 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+ Element Formation Element= 1000 Cum.  Iter.= 33 CP= 415.134             
+  Time= 0.40000 Load Step= 20 Substep= 1 Equilibrium Iteration= 2.       
+ CSEG Convergence Norm=  3.9407      Previous Norm=  3.9407    
+ CURR Convergence Norm=  452.55      Previous Norm=  452.55    
+     CUR SEG CONVERGENCE VALUE=  27.90      CRITERION=  17.57    
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  9.051     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+ curEqn=  67391  totEqn=  67391 Job CP sec=    416.725
+      Factor Done=  50% Factor Wall sec=      0.192 rate=    8311.3 Mflops
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1025E-03
+     CUR SEG CONVERGENCE VALUE=  3.349      CRITERION=  17.56     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  9.051     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP    20   SUBSTEP     1  COMPLETED.    CUM ITER =     33
+ *** TIME =  0.400000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =     418.161   TIME= 13:58:05
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE=  3.349      CRITERION=  17.56    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  9.504    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=    420.906
+      Factor Done=  50% Factor Wall sec=      0.202 rate=    7906.9 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    

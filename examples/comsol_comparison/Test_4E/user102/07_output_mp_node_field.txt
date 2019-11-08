@@ -1,0 +1,24 @@
+/post1
+set,first
+
+!get nodes at midplane
+alls
+alls,below,area
+NSLE,S,CORNER     !be careful with midside nodes if higher order
+nsel,r,loc,y,0
+*get,nn,node,num,count
+
+/DELETE,B_v_x,txt
+*cfopen,B_v_x,txt
+
+*do,i,1,nn
+	*get,n1,node,num,nxth
+	*get,By1,node,n1,b,y
+	*get,x1,node,n1,loc,x
+	nsel,u,node,,n1
+	*vwrite,x1,By1,
+(2(ES16.7))
+*enddo
+
+
+*cfclose

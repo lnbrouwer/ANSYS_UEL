@@ -1,0 +1,360 @@
+
+ *DO LOOP ON PARAMETER= I FROM  1.0000     TO  50.000     BY  1.0000    
+
+ TIME= 0.20000E-01
+
+ USE     1 SUBSTEP(S) THIS LOAD STEP FOR ALL  DEGREES OF FREEDOM
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+                       S O L U T I O N   O P T I O N S
+
+   PROBLEM DIMENSIONALITY. . . . . . . . . . . . .2-D                  
+   DEGREES OF FREEDOM. . . . . . AZ   VOLT EMF  CURR
+   ANALYSIS TYPE . . . . . . . . . . . . . . . . .STATIC (STEADY-STATE)
+   ELECTRO-MAGNETIC UNITS. . . . . . . . . . . . .MKS          
+      MUZERO . . . . . . . . . . . . . . . . . . . 0.12566E-05
+   NEWTON-RAPHSON OPTION . . . . . . . . . . . . .PROGRAM CHOSEN   
+   GLOBALLY ASSEMBLED MATRIX . . . . . . . . . . .UNSYMMETRIC
+
+ *** WARNING ***                         CP =      10.280   TIME= 14:32:21
+ Final slope ( 1.256042399E-06 ) of B-H curve for material 4 is less     
+ than free space permeability.                                           
+
+ *** NOTE ***                            CP =      10.280   TIME= 14:32:21
+ The step data was checked and warning messages were found.              
+  Please review output or errors file (                                  
+ D:\ansys_UDF_dist_v1\CERN_benchmarking_v10\Test_5_for_paper\Test_5A_tes 
+ stmulti\user102_CC\udf_dipole.err ) for these warning messages.         
+
+ *** NOTE ***                            CP =      10.280   TIME= 14:32:21
+ The Solution Control Option is only valid for single field structural,  
+ single field thermal and coupled-field analyses with structural         
+ degrees of freedom.  The SOLCONTROL,ON command (if present) has been    
+ de-activated.                                                           
+
+ *** NOTE ***                            CP =      10.280   TIME= 14:32:21
+ This nonlinear analysis defaults to using the full Newton-Raphson       
+ solution procedure.  This can be modified using the NROPT command.      
+
+                      L O A D   S T E P   O P T I O N S
+
+   LOAD STEP NUMBER. . . . . . . . . . . . . . . .     1
+   TIME AT END OF THE LOAD STEP. . . . . . . . . . 0.20000E-01
+   NUMBER OF SUBSTEPS. . . . . . . . . . . . . . .     1
+   MAXIMUM NUMBER OF EQUILIBRIUM ITERATIONS. . . .    25
+   STEP CHANGE BOUNDARY CONDITIONS . . . . . . . .    NO
+   TERMINATE ANALYSIS IF NOT CONVERGED . . . . . .YES (EXIT)  
+   CONVERGENCE CONTROLS. . . . . . . . . . . . . .USE DEFAULTS
+   PRINT OUTPUT CONTROLS . . . . . . . . . . . . .NO PRINTOUT
+   DATABASE OUTPUT CONTROLS
+      ITEM     FREQUENCY   COMPONENT
+       ALL        ALL               
+       ALL       NONE               
+      ESOL       LAST       ESOLU   
+      NSOL       LAST       NSOLU   
+
+
+
+ *** WARNING ***                         CP =      11.388   TIME= 14:32:22
+ This data file is using at least one element type that has not been     
+ verified by the ANSYS, Inc.  Quality Assurance Department.              
+
+ Range of element maximum matrix coefficients in global coordinates
+ Maximum = 7267776.6 at element 11423.                                   
+ Minimum = 1.E-30 at element 22478.                                      
+
+ *** WARNING ***                         CP =      11.388   TIME= 14:32:22
+ Coefficient ratio exceeds 1.0e8 - Check results.                        
+
+   *** ELEMENT MATRIX FORMULATION TIMES
+  TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+     1     15597  PLANE53       0.281   0.000018
+     2      6880  USER102       0.390   0.000057
+     3         1  CIRCU124      0.000   0.000000
+     5         1  CIRCU124      0.000   0.000000
+     6         1  CIRCU124      0.000   0.000000
+ Time at end of element matrix formulation CP = 11.388073.               
+
+ ALL CURRENT ANSYS DATA WRITTEN TO FILE NAME= udf_dipole.rdb
+  FOR POSSIBLE RESUME FROM THIS POINT
+     CUR SEG CONVERGENCE VALUE=  0.000      CRITERION=  0.000    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION= 0.4525    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+
+ SPARSE MATRIX DIRECT SOLVER.
+  Number of equations =       67391,    Maximum wavefront =    104
+
+ *** NOTE ***                            CP =      11.762   TIME= 14:32:23
+ The initial memory allocation (-m) has been exceeded.                   
+  Supplemental memory allocations are being used.                        
+  Memory allocated for solver =        2487.333 MB
+  Memory required for in-core =         117.872 MB
+  Memory required for out-of-core =      28.312 MB
+
+
+ *** NOTE ***                            CP =      12.698   TIME= 14:32:24
+ The Sparse Matrix solver is currently running in the in-core memory     
+ mode.  This memory mode uses the most amount of memory in order to      
+ avoid using the hard drive as much as possible, which most often        
+ results in the fastest solution time.  This mode is recommended if      
+ enough physical memory is present to accommodate all of the solver      
+ data.                                                                   
+
+ *** WARNING ***                         CP =      12.698   TIME= 14:32:24
+ Pivoting has been activated for the Sparse Matrix solver.  The memory   
+ required may greatly exceed the predicted amount.  In that event, use   
+ the BCSOPTION command to change the memory mode and/or memory size      
+ used by the Sparse Matrix solver.                                       
+
+ *** NOTE ***                            CP =      12.698   TIME= 14:32:24
+ The system matrix is unsymmetric.                                       
+ curEqn=  33701  totEqn=  67391 Job CP sec=     12.917
+      Factor Done=  55% Factor Wall sec=      0.137 rate=    6448.3 Mflops
+ curEqn=  67391  totEqn=  67391 Job CP sec=     13.026
+      Factor Done= 100% Factor Wall sec=      0.251 rate=    6362.3 Mflops
+ Sparse solver maximum pivot= 1.26375E+16 at node 1 CURR.                
+ Sparse solver minimum pivot= -0.791295747 at node 1 EMF.                
+ Sparse solver minimum pivot in absolute value= 0 at node 67788 VOLT.    
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.6006      CRITERION= 0.9349     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION= 0.4525     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+
+   *** ELEMENT RESULT CALCULATION TIMES
+  TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+     1     15597  PLANE53       0.203   0.000013
+     2      6880  USER102       0.265   0.000039
+     3         1  CIRCU124      0.000   0.000000
+     5         1  CIRCU124      0.000   0.000000
+     6         1  CIRCU124      0.000   0.000000
+
+   *** NODAL LOAD CALCULATION TIMES
+  TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+     1     15597  PLANE53       0.016   0.000001
+     2      6880  USER102       0.000   0.000000
+     3         1  CIRCU124      0.000   0.000000
+     5         1  CIRCU124      0.000   0.000000
+     6         1  CIRCU124      0.000   0.000000
+ *** LOAD STEP     1   SUBSTEP     1  COMPLETED.    CUM ITER =      1
+ *** TIME =  0.200000E-01     TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =      14.508   TIME= 14:32:26
+ Solution is done!                                                       
+
+
+ *** ANSYS BINARY FILE STATISTICS
+  BUFFER SIZE USED= 16384
+       49.312 MB WRITTEN ON ELEMENT MATRIX FILE: udf_dipole.emat
+       24.625 MB WRITTEN ON ELEMENT SAVED DATA FILE: udf_dipole.esav
+       31.312 MB WRITTEN ON ASSEMBLED MATRIX FILE: udf_dipole.full
+       13.125 MB WRITTEN ON RESULTS FILE: udf_dipole.rst
+
+ *ENDDO  INDEX= I                               
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.6006      CRITERION= 0.9349    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION= 0.9051    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=     16.271
+      Factor Done=  50% Factor Wall sec=      0.210 rate=    7601.9 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.6563E-01  CRITERION=  1.869     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION= 0.9051     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     2   SUBSTEP     1  COMPLETED.    CUM ITER =      2
+ *** TIME =  0.400000E-01     TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =      17.613   TIME= 14:32:29
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.6563E-01  CRITERION=  1.869    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  1.358    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=     19.391
+      Factor Done=  50% Factor Wall sec=      0.207 rate=    7718.3 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.2578E-01  CRITERION=  2.804     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  1.358     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     3   SUBSTEP     1  COMPLETED.    CUM ITER =      3
+ *** TIME =  0.600000E-01     TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =      20.733   TIME= 14:32:32
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+ Element Formation Element= 1000 Cum.  Iter.= 4 CP= 21.310               
+  Time= 0.80000E-01 Load Step= 4 Substep= 1 Equilibrium Iteration= 1.    
+ CSEG Convergence Norm= 0.25780E-01  Previous Norm= 0.65632E-01
+ CURR Convergence Norm=  0.0000      Previous Norm=  452.55    
+     CUR SEG CONVERGENCE VALUE= 0.2578E-01  CRITERION=  2.804    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  1.810    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=     22.542
+      Factor Done=  50% Factor Wall sec=      0.213 rate=    7505.0 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.2569E-01  CRITERION=  3.739     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  1.810     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     4   SUBSTEP     1  COMPLETED.    CUM ITER =      4
+ *** TIME =  0.800000E-01     TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =      23.915   TIME= 14:32:35
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.2569E-01  CRITERION=  3.739    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  2.263    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=     25.662
+      Factor Done=  50% Factor Wall sec=      0.220 rate=    7269.7 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.3007E-01  CRITERION=  4.673     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  2.263     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     5   SUBSTEP     1  COMPLETED.    CUM ITER =      5
+ *** TIME =  0.100000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =      26.973   TIME= 14:32:38
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.3007E-01  CRITERION=  4.673    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  2.715    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=     28.704
+      Factor Done=  50% Factor Wall sec=      0.208 rate=    7697.8 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+     CUR SEG CONVERGENCE VALUE= 0.5042E-01  CRITERION=  5.608     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  2.715     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     6   SUBSTEP     1  COMPLETED.    CUM ITER =      6
+ *** TIME =  0.120000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =      30.108   TIME= 14:32:42
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.5042E-01  CRITERION=  5.608    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  3.168    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=     31.887
+      Factor Done=  50% Factor Wall sec=      0.205 rate=    7796.4 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+ Element Formation Element= 1000 Cum.  Iter.= 8 CP= 32.074               
+  Time= 0.14000 Load Step= 7 Substep= 1 Equilibrium Iteration= 2.        
+ CSEG Convergence Norm= 0.50416E-01  Previous Norm= 0.50416E-01
+ CURR Convergence Norm=  452.55      Previous Norm=  452.55    
+     CUR SEG CONVERGENCE VALUE= 0.1355      CRITERION=  6.543     <<< CONVERGED
+     CURRENT CONVERGENCE VALUE=  0.000      CRITERION=  3.168     <<< CONVERGED
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000     <<< CONVERGED
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14 <<< CONVERGED
+     The calculated reference VLTG CONVERGENCE VALUE   =   0.000    
+      is less than MINREF (which can be modified on the CNVTOL command).
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     7   SUBSTEP     1  COMPLETED.    CUM ITER =      7
+ *** TIME =  0.140000         TIME INC =  0.200000E-01
+
+ *** NOTE ***                            CP =      33.213   TIME= 14:32:45
+ Solution is done!                                                       
+
+ *****  ANSYS SOLVE    COMMAND  *****
+
+     CUR SEG CONVERGENCE VALUE= 0.1355      CRITERION=  6.543    
+     CURRENT CONVERGENCE VALUE=  452.5      CRITERION=  3.620    
+     CURT CONVERGENCE VALUE   =  0.000      CRITERION=  0.000    
+     VLTG CONVERGENCE VALUE   =  0.000      CRITERION= 0.1000E-14
+ curEqn=  67391  totEqn=  67391 Job CP sec=     35.038
+      Factor Done=  50% Factor Wall sec=      0.224 rate=    7120.5 Mflops
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=   320.0    
+
+ *** ERROR ***                           CP =      35.131   TIME= 14:32:47
+ An unexpected error ( SIG$BREAK ) has occurred...  ANSYS internal data  
+ has been corrupted.  ANSYS is unable to recover and will terminate.     
+ Previously saved files are unaffected.  Please send the data leading    
+ to this operation to your technical support provider, as this will      
+ allow ANSYS, Inc to improve the program.                                
+
+ *** WARNING ***                         CP =      35.147   TIME= 14:32:47
+ The unconverged solution (identified as time 0.16 substep 999999) is    
+ output for analysis debug purposes.  Results should not be used for     
+ any other purpose.                                                      
+
+
+
+
+         R E S T A R T   I N F O R M A T I O N
+
+ REASON FOR TERMINATION. . . . . . . . . .ERROR IN ELEMENT FORMULATION            
+ FILES NEEDED FOR RESTARTING . . . . . . .  udf_dipole.Rnnn
+                                            udf_dipole.ldhi
+                                            udf_dipole.rdb
+ TIME OF LAST SOLUTION . . . . . . . . . . 0.14000    
+    TIME AT START OF THE LOAD STEP . . . . 0.14000    
+    TIME AT END OF THE LOAD STEP . . . . . 0.16000    
+
+ ALL CURRENT ANSYS DATA WRITTEN TO FILE NAME= udf_dipole.db
+  FOR POSSIBLE RESUME FROM THIS POINT
+
+
+
+
+
+ ***** ROUTINE COMPLETED *****  CP =        35.319
+
+
+
+ *** WARNING ***                         CP =      35.319   TIME= 14:32:47
+ TIME is not a recognized BEGIN command, abbreviation, or macro.  This   
+ command will be ignored.                                                
+
+ *** ERROR ***                           CP =      35.319   TIME= 14:32:47
+ An unexpected error ( SIG$SEGV ) has occurred...  ANSYS internal data   
+ has been corrupted.  ANSYS is unable to recover and will terminate.     
+ Previously saved files are unaffected.  Please send the data leading    
+ to this operation to your technical support provider, as this will      
+ allow ANSYS, Inc to improve the program.                                

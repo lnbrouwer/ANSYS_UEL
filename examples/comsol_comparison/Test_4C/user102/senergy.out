@@ -1,0 +1,14 @@
+                SUMMARY OF STORED ENERGY CALCULATION  
+ Load Step Number:      ***
+ Substep Number:         1.
+ Time:             0.4980E+00
+   Material Number of  Stored Energy        Material Description  
+    Number  Elements       (J/m) 
+        4.    4454.    0.11022E+00    Nonlin.   Isotrp.      .         .   
+ _____________________________________________________________________   
+   T O T A L  4454.      0.11022E+00
+ Note:                                                                   
+ The energy density for the active elements used in the energy  
+ calculation is stored in the element item "MG_ENG" for display  
+ and printing. The total stored energy is saved as parameter (S_ENG)  
+ _____________________________________________________________________   

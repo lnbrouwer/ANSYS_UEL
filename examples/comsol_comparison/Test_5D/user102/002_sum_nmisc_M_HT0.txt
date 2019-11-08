@@ -1,0 +1,129 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! sum flux for differential inductance
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+cmsel,s,cond
+alls,below,area
+esel,r,ename,,102
+etable,Az102,a,z
+etable,area102,volu
+smult,flux102,Az102,area102,1,1
+
+ssum
+*get,Az102sum,ssum,0,item,Az102
+*get,area102sum,ssum,0,item,area102
+*get,flux102sum,ssum,0,item,flux102
+
+flux102sum = flux102sum*nturns*curdir/across  !cur-dir is opposite becuase of circuit coupling -> takes care of the when divided by current
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! find the total stored energy of non-yoke
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+alls
+cmsel,u,yoke
+alls,below,area
+etable,Eall,SENE
+!etable,Aall,volu
+!smult,Ese,Eall,Aall,1,1
+ssum
+!*get,EngA,ssum,0,item,Ese
+*get,eother,ssum,0,item,Eall
+
+!cmsel,s,yoke
+!alls,below,area
+!senergy,0
+!eyoke = S_ENG
+
+!EngA = eyoke + eother
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! sum other relevant results
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+!do user102 by hand -> iso,linear
+
+cmsel,s,cond1
+alls,below,area
+!etable,Bs,B,sum
+etable,Ptot,jheat
+etable,tau,nmisc,10
+etable,Mx,nmisc,21
+etable,My,nmisc,22
+etable,Pres,nmisc,11
+etable,Ptau,nmisc,12
+etable,IFCU,nmisc,14
+!etable,rho,nmisc,18
+!etable,rho,nmisc,24     !now use cern homoginized rho
+etable,area102,volu
+smult,ttau,tau,area102,1,1
+smult,MMx,Mx,area102,1,1
+smult,MMy,My,area102,1,1
+!smult,BBs,Bs,area102,1,1
+smult,PPtau,Ptau,area102,1,1
+smult,PPres,Pres,area102,1,1
+smult,PIFCU,IFCU,area102,1,1
+smult,PPtot,Ptot,area102,1,1
+!smult,rrho,rho,area102,1,1
+ssum
+*get,ttausum,ssum,0,item,ttau
+*get,MMxsum,ssum,0,item,MMx
+*get,MMysum,ssum,0,item,MMy
+!*get,BBssum,ssum,0,item,BBs
+*get,PPressum,ssum,0,item,PPres
+*get,PPtausum,ssum,0,item,PPtau
+*get,PPtotsum,ssum,0,item,PPtot
+*get,IFCUsum,ssum,0,item,PIFCU
+!*get,rrhosum,ssum,0,item,rrho
+*get,areasum,ssum,0,item,area102
+*set,tauave,ttausum/areasum
+*set,Mxave,MMxsum/areasum
+*set,Myave,MMysum/areasum
+*set,IFCUave,IFCUsum/areasum
+!*set,Bsave,BBssum/areasum
+!*set,rhoave,rrhosum/areasum
+
+
+
+!do user102 by hand -> iso,linear
+cmsel,s,cond
+alls,below,area
+etable,PtauALL,nmisc,12
+etable,PresALL,nmisc,11
+smult,PPtauALL,PtauALL,area102,1,1
+smult,PPresALL,PresALL,area102,1,1
+ssum
+*get,PPtausumALL,ssum,0,item,PPtauALL
+*get,PPressumALL,ssum,0,item,PPresALL
+
+etable,PALL,jheat
+smult,PPALL,PALL,area102,1,1
+ssum
+*get,PPsumALL,ssum,0,item,PPALL
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! now find total coil resistance 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+cmsel,s,cond
+alls,below,area
+etable,IFCU2,nmisc,14
+etable,rho,nmisc,24     !now use cern homoginized rho
+etable,area102,volu
+smult,rrho,rho,area102,1,1
+
+smult,rrho2,rrho,IFCU2,1,1
+smult,rrho3,rrho2,IFCU2,1,1
+ssum
+*get,rrhosum,ssum,0,item,rrho3    !integral of rho_ave over the coil area
+
+!with no sym
+!sc = across
+!*set,Rcoil,Lc*(nc/sc)*(nc/sc)*rrhosum
+
+
+!set total number of turns and total area (with no sym)
+nc = nturns
+sc = across
+*set,Rcoil,Lc*(nc/sc)*(nc/sc)*rrhosum

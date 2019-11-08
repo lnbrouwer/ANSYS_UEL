@@ -1,0 +1,34 @@
+!do user102 by hand -> iso,linear
+cmsel,s,wire
+alls,below,area
+etable,Bs,B,y
+etable,Hs,H,y
+etable,Mx,nmisc,21
+etable,My,nmisc,22
+etable,Ptau,nmisc,12
+etable,area102,volu
+smult,MMx,Mx,area102,1,1
+smult,MMy,My,area102,1,1
+smult,BBs,Bs,area102,1,1
+smult,HHs,Hs,area102,1,1
+smult,PPtau,Ptau,area102,1,1
+ssum
+*get,MMxsum,ssum,0,item,MMx
+*get,MMysum,ssum,0,item,MMy
+*get,BBssum,ssum,0,item,BBs
+*get,HHssum,ssum,0,item,HHs
+*get,PPtausum,ssum,0,item,PPtau
+*get,areasum,ssum,0,item,area102
+*set,Mxave,MMxsum/areasum
+*set,Myave,MMysum/areasum
+*set,Bsave,BBssum/areasum
+*set,Hyave,HHssum/areasum
+*set,PPtauave,PPtausum/areasum
+
+!do user102 by hand -> iso,linear
+cmsel,s,wire
+alls,below,area
+etable,PtauALL,nmisc,12
+smult,PPtauALL,PtauALL,area102,1,1
+ssum
+*get,PPtausumALL,ssum,0,item,PPtauALL

@@ -1,0 +1,437 @@
+!*******************************************************
+!********** CERN Benchmarking **************************
+!*******************************************************
+
+/title, udf_dipole
+/prep7
+
+!********** Options *******************************
+!*afun,rad
+pi=acos(-1)
+*afun,deg
+!/UIS,MSGPOP,4  !suppress warnings
+/NERR,,99999999,     ! changes # of error and warnings to prevent crashing for large # of warnings
+!**************************************************
+
+/title, udf_dipole
+
+
+!**************************************************
+!****** Material Properties (SI - magnetic) *******
+!**************************************************
+
+!Coil
+mp,murx,1,1   !rel. perm.
+!Air
+mp,murx,10,1   !rel. perm.
+
+!Iron (4)  bh table from cern
+tb,bh,4,, 44
+TBPT,,0.000000,0.000000 
+TBPT,,7.941832,0.007120 
+TBPT,,15.883663,0.016700 
+TBPT,,23.825495,0.029250 
+TBPT,,31.767326,0.045220 
+TBPT,,47.531623,0.088910 
+TBPT,,63.367539,0.154340 
+TBPT,,79.219371,0.240660 
+TBPT,,158.812757,0.765070 
+TBPT,,317.649387,1.296830 
+TBPT,,475.180947,1.452170 
+TBPT,,633.627647,1.520430 
+TBPT,,792.106179,1.558410 
+TBPT,,1192.094374,1.609540 
+TBPT,,1589.758907,1.638920 
+TBPT,,1987.081257,1.660550 
+TBPT,,2386.281635,1.678260 
+TBPT,,2782.290957,1.694270 
+TBPT,,3179.493941,1.708280 
+TBPT,,3577.039107,1.721750 
+TBPT,,3971.377302,1.734140 
+TBPT,,4765.210312,1.757060 
+TBPT,,5559.099026,1.778050 
+TBPT,,6354.069994,1.797640 
+TBPT,,7149.486595,1.815670 
+TBPT,,7944.083548,1.833300 
+TBPT,,10590.000000,1.850000 
+TBPT,,13160.000000,1.900000 
+TBPT,,21170.000000,2.000000 
+TBPT,,33760.000000,2.100000 
+TBPT,,66000.000000,2.200000 
+TBPT,,120960.000000,2.280000 
+TBPT,,169600.000000,2.344300 
+TBPT,,212170.000000,2.399600 
+TBPT,,283130.000000,2.490500 
+TBPT,,339890.000000,2.562700 
+TBPT,,425040.000000,2.670600 
+TBPT,,566950.000000,2.849800 
+TBPT,,850760.000000,3.207400 
+TBPT,,1702300.000000,4.278200 
+TBPT,,2128000.000000,4.813400 
+TBPT,,2837700.000000,5.705200 
+TBPT,,3405100.000000,6.418600 
+TBPT,,4256700.000000,7.488700
+TBPLOT,bh,4,
+
+
+!**********EM Elements*******************************
+et,1,plane53        !2d EM: Az
+keyopt,1,1,0    
+!et,2,user102   !2d EM: Az,cur,emf (stranded circu)   
+!**************************************************
+
+et,2,user102   !2d EM: Az,cur,emf (stranded circu)   
+keyopt,2,1,2   ! circuit coupled
+keyopt,2,2,0   ! no transfer to thermal with binary
+keyopt,2,3,1   ! LBNL Jc fit -> THIS IS NOT YET SET UP -> HARD CODE SCU FIT, key(3) does nothing
+               ! no keyopt 4
+keyopt,2,5,1   ! NIST fit for rhocu
+               ! no keyopt 6
+keyopt,2,7,1   ! force SC at all times
+keyopt,2,8,1   ! turn off IFCC
+
+
+!/input,02_dipole_geo_twoairbc_dense,txt,
+/input,02_dipole_geo_twoairbc_loop,txt,
+
+!name conductor 
+cmsel,s,cond
+alls,below,area
+emodif,all,type,2
+emodif,all,real,2
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! real constants
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! scaling to match inductance and resistance -> pick not the same
+Lc = 10.11     
+Li = 9.20      
+
+!set real constants
+nturns = nc1+nc2
+nstrand = 40
+ds = 0.75e-3
+fcond = nstrand*ds*ds*pi/(4*aw*bw)
+fsc=0.4
+Lp = 14e-3
+feff = 0.75
+RRR = 200
+TauMult = 0.0
+scIFCU = 1.0 
+curdir = 1.0
+Ctau = 1e-3     !if constant tau is chosen using keyopt
+
+! Nb3Sn fit parameters (from Edvard)
+Tc0 = 16.0
+Bc0 = 28.11
+Jc0 = 174000/Bc0
+afit=0.96
+pfit = 1.52
+
+cmsel,s,cond
+alls,below,area
+asum
+*get,across,area,all,area
+		
+!no real constants are required for this simulation, put anyways to check they set correct
+R,2,across,nturns,fcond,fsc,curdir,Lc   !set real constants
+Rmore,Li,RRR,Lp,feff,Ctau,TauMult
+Rmore,Jc0,Tc0,Bc0,afit,pfit,scIFCU
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Set Up Circuit
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+et,9,circu124
+keyopt,9,1,4        ! circuit element - independent voltage source
+keyopt,9,2,4        ! piecewise linear load
+
+et,5,circu124
+keyopt,5,1,5        ! circuit element - stranded conductor -> connected to FEA domain
+
+et,6,circu124
+keyopt,6,1,0        ! circuit element - external resistor
+
+et,3,circu124
+keyopt,3,1,3        ! circuit element - independent current source
+keyopt,3,2,4        ! piecewise linear load
+
+
+!********** Real Constants for Circuit ************************************************************************
+rdump = 32.05e-3
+cur1 = 800
+
+SymFac = 4  ! left/right,top/bot
+
+R,3,cur1,0.0
+
+R,5,1.0     !symfactor is 1 (no symmetry)
+R,5,SymFac   
+R,6,rdump
+!*set,Rtot,rdump+SymFac*2*lmag*rhoc/(across)
+!*set,Rtot,rdump+2*lmag*rhoc/(across)
+*set,Rtot,rdump
+R,9,0,cur1*RTot,5.0/1000,cur1*RTot,5.1/1000,0,1000/1000,0    ! "dump res switch" 
+
+
+
+tf = 1.0
+I0f = 20e3
+I0f = 16e3
+
+R,3,0,0,tf,I0f    ! "linear ramp of current to I0f"
+
+
+
+
+!**************************************************
+!********** Create Circuit  ***********************
+!**************************************************
+csys,0
+
+xcirc = x0
+ycirc = -10e-3
+dyy = 12e-3
+xsft = aw*nc+dx*nc
+
+!make circuit nodes (location is arbitrary, connectivity is important)
+alls
+numcmp,node
+*get,nnode,node,,num,max
+numstr,node,nnode
+n,nnode+1,xcirc,ycirc
+n,nnode+2,xcirc+xsft,ycirc
+n,nnode+3,xcirc+xsft,ycirc-dyy
+n,nnode+4,xcirc+xsft/2.0,ycirc-dyy
+n,nnode+5,xcirc,ycirc-dyy
+n,nnode+6,0,0
+
+
+
+
+!define the circuit elements 
+
+!cond stranded source
+cmsel,s,cond
+alls,below,area
+emodif,all,type,2
+emodif,all,real,2
+*get,nc1,node,0,nxth
+type,5    
+real,5
+alls
+E,nnode+1,nnode+2,nc1
+
+
+
+
+!type,9    !independent voltage source
+!real,9
+!E,nnode+3,nnode+4,nnode+6
+
+type,3    !independent current source
+real,3
+E,nnode+3,nnode+4
+
+
+type,6    !resistor
+real,6
+E,nnode+4,nnode+5
+
+
+!cp to connect "wires"
+cp,next,volt,nnode+2,nnode+3
+cp,next,volt,nnode+1,nnode+5   !order matters if you ground nnode+1
+
+
+
+!enforce stranded condition
+cmsel,s,cond
+alls,below,area
+cp,next,emf,all
+cp,next,curr,all
+
+
+nsel,s,node,,nnode+1,nnode+10
+cm,gn,node
+esln,s,0
+cm,ge,elem
+
+alls
+/graphics,full
+alls
+eplot
+
+
+
+!******************************************
+!********** B.C ***************************
+!******************************************
+
+!cp az across coil boundaries
+alls
+alls,below,area
+cpintf,az,1e-7
+
+
+! Set boundary conditions of the voltage
+alls
+d,nnode+1,volt,0
+
+
+! Set boundary conditions of the magnetic vector potential
+alls
+csys,0
+lsel,r,loc,x,0
+nsll,s,1
+d,all,az,0
+
+alls
+csys,1
+lsel,r,loc,x,rbc
+nsll,s,1
+d,all,az,0
+
+
+!!!!! TURN OFF IRON YOKE
+!cmsel,s,yoke
+!alls,below,area
+!emodif,all,mat,1
+
+!*********************************************
+!****** Linear Ramp   ************************
+!*********************************************
+
+finish
+alls
+/solu
+outres,all,all
+nsubst,1
+antype,static
+pivcheck,off
+bfunif,temp,1.9
+
+!only output solution for cond and circuit elements for comparison
+cmsel,s,cond
+alls,below,area
+cmsel,a,gn
+cmsel,a,ge
+cm,esolu,elem
+cm,nsolu,node
+outres,all,none
+!outres,esol,all,esolu
+!outres,nsol,all,nsolu
+outres,esol,last,esolu
+outres,nsol,last,nsolu
+
+
+
+
+
+dt = 20e-3
+nstp = tf/dt
+
+
+*do,i,1,nstp
+ 
+  time,dt*i
+  nsubst,1
+  alls
+  solve
+	
+*enddo
+
+
+save
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Post-Process
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/post26
+lines,10000    !avoid repeating headers < 1000 lines
+numvar,100    !set number of variables great than the default of 10
+In = 10     !start esol numbering at 10
+
+/input,07_ansys_coil_post26_circu_v2,txt
+
+
+finish
+/post1
+alls
+plnsol,b,y
+plnsol,b,sum
+
+!/output,sol_track,txt
+
+csys,0
+*do,i,1,nstp
+	set,i
+	
+	
+  /input,001_sum_u102_flux,txt,
+  /input,002_sum_nmisc_M_HT0,txt
+	
+!	I0%i% = dI*i
+	flux102sum%i% = flux102sum
+!  Lflux%i% = flux102sum/I0%i%     !will have to divide by current in comparison script
+  Lflux%i% = flux102sum     !will have to divide by current in comparison script
+  MXave%i% = Mxave
+	Myave%i% = Myave
+	Bsave%i% = Bsave
+	PPtausum%i% = PPtausum
+	PPtausumALL%i% = PPtausumALL
+	flux102sum%i% = flux102sum
+	tm%i% = dt*i
+	cmsel,s,cond
+	alls,below,area
+	plnsol,b,sum
+	*get,Bmax%i%,plnsol,0,max
+	alls
+*enddo
+
+!/output,
+
+/DELETE,Mag_v_t,txt
+*cfopen,Mag_v_t,txt
+*do,i,1,nstp
+	*vwrite,0,flux102sum%i%,Lflux%i%,Bsave%i%,tm%i%,Mxave%i%,Myave%i%,PPtausum%i%,PPtausumALL%i%,Bmax%i%
+(10(ES16.7))
+*enddo
+*cfclose
+
+
+
+/eof
+
+
+
+
+!*********************************************
+!****** Static Solution   ********************
+!*********************************************
+
+finish
+alls
+/solu
+
+time,1
+nsubst,1
+alls
+solve
+
+finish
+/post1
+alls
+plnsol,b,y
+plnsol,b,sum
+/eof
+
+

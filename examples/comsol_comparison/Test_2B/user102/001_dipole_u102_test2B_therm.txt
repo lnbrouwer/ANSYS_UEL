@@ -1,0 +1,226 @@
+!*******************************************************
+!********** CERN Benchmarking **************************
+!*******************************************************
+
+resume,geo,db,,
+
+
+/title, udf_dipole_therm
+/prep7
+
+
+alls
+cmsel,u,cond
+alls,below,area
+aclear,all,
+adele,all,,,1
+
+
+
+!COIL PROPERTIES (mat11)  -> from Lorenzo
+mptemp,1,1.9
+
+densmix = 1.0    !since we are working with Cv
+
+cvCu = 500
+cvNb3sn = 250
+CvG10 = 0.0
+CvG10 = 750.0
+Cvmix = cvCu*fcond*(1-fsc) + cvNb3sn*fcond*fsc + cvG10*(1-fcond)
+
+kxxCu = 300
+kxxNb3Sn = 300
+kxxG10 = 0.01
+kxxmix = kxxCu*fcond*(1-fsc) + kxxNb3sn*fcond*fsc + kxxG10*(1-fcond)
+
+mp,dens,11,densmix     
+mp,kxx,11,kxxmix       
+mp,c,11,Cvmix         
+
+
+
+
+! thermal for conductor region only
+et,12,user101
+keyopt,12,1,1         ! use input homoginized properties
+keyopt,12,2,0         ! no transfer to therm
+
+R,12,0,0,0,0,0,   !set real constants
+Rmore,0,
+
+
+
+cmsel,s,cond
+alls,below,area
+emodif,all,mat,11
+emodif,all,type,12
+emodif,all,real,12
+
+alls
+etdele,1,10
+mpdele,all,1,10
+tbdele,all,1,10
+
+
+
+!*********************************************
+!****** Linear Ramp   ************************
+!*********************************************
+
+finish
+alls
+/solu
+nsubst,1
+antype,trans
+!bfunif,temp,1.9
+ic,all,temp,1.9
+outres,all,last
+
+!only output solution for cond for comparison
+cmsel,s,cond
+alls,below,area
+cm,esolu,elem
+cm,nsolu,node
+outres,all,none
+!outres,esol,all,esolu
+!outres,nsol,all,nsolu
+outres,esol,last,esolu
+outres,nsol,last,nsolu
+
+
+
+!set ramp parameters 
+dt = 0.02
+dt = 0.005   !do 4x number of steps
+tf = 1.0
+nstp = tf/dt
+
+
+
+
+
+*do,i,1,nstp
+ time,dt*i
+ ctime = dt*i
+
+  nsubst,1
+	
+  alls
+	ldread,hgen,,,ctime,,udf_dipole_mag,rmg
+	alls
+  solve
+*enddo
+
+
+finish
+/post1
+alls
+plnsol,temp
+
+csys,0
+*do,i,1,nstp
+	set,i
+	
+
+  /input,002_sum_101_therm,txt
+	
+
+	Tsave%i% = Tsave
+	tm%i% = dt*i
+
+*enddo
+
+
+/DELETE,Therm_v_t,txt
+*cfopen,Therm_v_t,txt
+*do,i,1,nstp
+	*vwrite,tm%i%,Tsave%i%
+(2(ES16.7))
+*enddo
+*cfclose
+
+
+
+
+/eof
+
+
+
+finish
+/post1
+alls
+plnsol,b,y
+plnsol,b,sum
+csys,0
+
+save
+
+
+*do,i,1,nstp
+	set,i
+	
+	
+  /input,001_sum_u102_flux,txt,
+  /input,002_sum_nmisc_M_HT0,txt
+!sets
+!flux102sum = flux102sum*nturns*dirz/(across1+across2+across3)
+!*set,Lflux,flux102sum/I0
+	
+	I0%i% = dI*i
+!	I0%i% = I0f  !constant current
+	flux102sum%i% = flux102sum
+  Lflux%i% = flux102sum/I0%i%
+  MXave%i% = Mxave
+	Myave%i% = Myave
+	Bsave%i% = Bsave
+	rhoave%i% = rhoave
+	PPsumALL%i% = PPsumALL
+	PPtotsum%i% = PPtotsum
+	PPtausum%i% = PPtausum
+	PPtausumALL%i% = PPtausumALL
+!  Lflux%i% = Lflux
+	flux102sum%i% = flux102sum
+	tm%i% = dt*i
+	alls
+	plnsol,b,sum
+	*get,Bmax%i%,plnsol,0,max
+*enddo
+
+/output,
+
+/DELETE,Mag_v_t,txt
+*cfopen,Mag_v_t,txt
+*do,i,1,nstp
+	*vwrite,I0%i%,flux102sum%i%,Lflux%i%,Bsave%i%,tm%i%,Mxave%i%,Myave%i%,PPtausum%i%,PPtausumALL%i%,PPtotsum%i%,PPsumALL%i%,rhoave%i%
+(12(ES16.7))
+*enddo
+*cfclose
+
+
+
+/eof
+
+
+
+
+!*********************************************
+!****** Static Solution   ********************
+!*********************************************
+
+finish
+alls
+/solu
+
+time,1
+nsubst,1
+alls
+solve
+
+finish
+/post1
+alls
+plnsol,b,y
+plnsol,b,sum
+/eof
+
+

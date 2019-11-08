@@ -1,0 +1,121 @@
+rem ----------------------------------------------------------------------------------------------
+rem  set paths
+rem ----------------------------------------------------------------------------------------------
+
+rem benchmarking directory
+SET MY_PATH=D:\ansys_UDF_dist_v2\02_CERN_benchmarking_v11_clean
+
+rem compiled custom ANSYS.exe directory
+rem SET MY_PATH2=D:\ansys_UDF_dist_v2\03_uel\uel_v6
+SET MY_PATH2=D:\ansys_UDF_dist_v2\03_uel\uel_v8
+
+cd /d "%MY_PATH%"
+
+
+
+rem ----------------------------------------------------------------------------------------------
+rem  Test4A
+rem ----------------------------------------------------------------------------------------------
+
+cd Test_4A
+del *.csv
+del *.jpg
+cd user102
+del udf_dipole.*
+del circu_res.txt
+del Mag_v_t.txt
+del power1.txt
+del voltage1.txt
+del current1.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_4A\user102" -j "udf_dipole" -b -i 001_dipole_u102_test4A.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+
+
+rem ----------------------------------------------------------------------------------------------
+rem  Test4B
+rem ----------------------------------------------------------------------------------------------
+
+cd Test_4B
+del *.csv
+del *.jpg
+cd user102
+del udf_dipole.*
+del circu_res.txt
+del Mag_v_t.txt
+del power1.txt
+del voltage1.txt
+del current1.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_4B\user102" -j "udf_dipole" -b -i 001_dipole_u102_test4B.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+
+
+rem ----------------------------------------------------------------------------------------------
+rem  Test4C
+rem ----------------------------------------------------------------------------------------------
+
+cd Test_4C
+del *.csv
+del *.jpg
+cd user102
+del udf_dipole.*
+del circu_res.txt
+del Mag_v_t.txt
+del power1.txt
+del voltage1.txt
+del current1.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_4C\user102" -j "udf_dipole" -b -i 001_dipole_u102_test4C.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+
+
+rem ----------------------------------------------------------------------------------------------
+rem  Test4D
+rem ----------------------------------------------------------------------------------------------
+
+cd Test_4D
+del *.csv
+del *.jpg
+cd user102
+del udf_dipole.*
+del circu_res.txt
+del Mag_v_t.txt
+del Therm_v_t.txt
+del power1.txt
+del voltage1.txt
+del current1.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_4D\user102" -j "udf_dipole" -b -i 001_dipole_u102_test4D_MFS.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+
+
+ 
+rem ----------------------------------------------------------------------------------------------
+rem  Test4E
+rem ----------------------------------------------------------------------------------------------
+
+cd Test_4E
+del *.csv
+del *.jpg
+cd user102
+del udf_dipole.*
+del circu_res.txt
+del Mag_v_t.txt
+del Therm_v_t.txt
+del power1.txt
+del voltage1.txt
+del current1.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_4E\user102" -j "udf_dipole" -b -i 001_dipole_u102_test4E_MFS.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+
+
+
+
+

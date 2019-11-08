@@ -1,0 +1,50 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Post1 Loop
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+finish
+/post1
+cmsel,s,cond
+set,last,
+*get,nset,active,0,set,NSET
+plnsol,b,y
+plnsol,b,sum
+csys,0
+
+
+
+/output,
+
+!find the yoke energy for the first and last step
+/uis,msgpop,4     !only error msg
+set,first
+cmsel,s,yoke
+alls,below,area
+senergy,0
+eyokeI = S_ENG
+set,last
+cmsel,s,yoke
+alls,below,area
+senergy,0
+eyokeF = S_ENG
+
+
+
+
+
+/DELETE,Mag_v_t,txt
+*cfopen,Mag_v_t,txt
+
+set,first
+*do,i,1,nset
+  /input,002_sum_nmisc_M_HT0,txt
+!	EngA = eother + eyoke%i%
+	EngA = eother 
+  *get,tm,active,0,set,time
+	*vwrite,tm,flux102sum,EngA,eyokeI,eyokeF,tauave,Mxave,Myave,PPtausum,PPtausumALL,PPressum,PPressumALL,Rcoil
+(13(ES16.7))
+	set,next
+*enddo
+
+*cfclose

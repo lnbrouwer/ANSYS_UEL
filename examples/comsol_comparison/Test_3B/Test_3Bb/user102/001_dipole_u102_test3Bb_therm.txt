@@ -1,0 +1,318 @@
+!*******************************************************
+!********** CERN Benchmarking **************************
+!*******************************************************
+
+/title, udf_dipole
+/prep7
+
+!********** Options *******************************
+!*afun,rad
+pi=acos(-1)
+*afun,deg
+!/UIS,MSGPOP,4  !suppress warnings
+/NERR,,99999999,     ! changes # of error and warnings to prevent crashing for large # of warnings
+!**************************************************
+
+/title, udf_dipole
+
+
+
+!**********EM Elements*******************************
+et,1,plane53        !2d EM: Az
+keyopt,1,1,0    
+!et,2,user102   !2d EM: Az,cur,emf (stranded circu)   
+!**************************************************
+
+et,2,user102
+keyopt,2,1,0         ! 1= AZ only, 2 = Az,curr,emf
+keyopt,2,2,0         ! 0 = no transfer to therm, 1 = yes transfer
+keyopt,2,3,1         ! LBNL Jc fit (not applicable since  key(7)=1)
+keyopt,2,5,1         ! 0 = table/fixed for rsvx, 1 = NIST, 2 = CUDI, 3 = MATPRO
+keyopt,2,7,1         ! 0 = check/C.S., 1 = force superconducting, 2 = force quenched
+keyopt,2,8,0         ! 0 = yes IFCC - calc tau, 1 = no IFCC, 2 = yes IFCC - fixed tau (real 11)
+
+/input,02_dipole_geo_twoairbc_loop,txt,
+
+
+
+!name conductor 
+cmsel,s,cond1
+*do,i,2,nc
+	cmsel,a,cond%i%
+*enddo
+
+
+
+alls
+cmsel,u,cond
+alls,below,area
+aclear,all,
+adele,all,,,1
+
+
+
+!COIL PROPERTIES (mat11)  -> fake to avoid error of undefined
+mptemp,1,1.9      
+mp,dens,11,99999    
+mp,kxx,11,99999        
+mp,c,11,99999  
+
+
+
+! thermal for conductor region only
+et,12,user101
+keyopt,12,1,0         ! 0=internal fits, 1=ANSYS table
+keyopt,12,2,0         ! 0=no transfer to mag, 1=transfer to mag
+keyopt,12,3,1         ! 0=NbTi, 1=Nb3Sn, 2 = Bi2212
+keyopt,12,4,0         ! 0=Cu, 1=Ag
+keyopt,12,5,0         ! 0=G10
+keyopt,12,6,1         ! 0=NIST Cucv, 1=CUDI, 2=MATPRO 
+keyopt,12,7,0         ! 0=NIST Cukxx, 1=CUDI, 2=MATPRO 
+keyopt,12,8,0         ! TBD (NbTi Cv)
+keyopt,12,9,0         ! 0=NIST, 1=CUDI,  (Nb3Sn Cv)
+keyopt,12,10,0         ! TBD  (Bi2212 Cv)
+keyopt,12,11,0         ! 0=NIST  (G10 Cv)
+keyopt,12,12,0         ! Agcv
+keyopt,12,13,0         ! Agkxx
+
+
+!set real constants
+nstrand = 40
+ds = 0.75e-3
+fcond = nstrand*ds*ds*pi/(4*aw*bw)
+fsc=0.4
+!tau = 1e-3   !1 ms fixed tau, tau is now calculated
+Lp = 14e-3
+feff = 1.0
+RRR = 200
+scIFCC = 1.0
+scIFCU = 1.0
+
+
+R,2,0,0,fcond,fsc,0,   !set real constants
+Rmore,0,RRR,Lp,feff,0,scIFCC
+Rmore,0,0,0,0,0,scIFCU
+
+
+
+!set real constants
+nstrand = 40
+ds = 0.75e-3
+fcond = nstrand*ds*ds*pi/(4*aw*bw)
+fsc=0.4
+RRR = 200
+emap = 0
+Bev = 5.0
+qflag = -1
+
+
+
+R,12,emap,Bev,qflag,RRR,fcond,fsc   !set real constants
+Rmore,,
+
+
+
+cmsel,s,cond
+alls,below,area
+emodif,all,mat,11
+emodif,all,type,12
+emodif,all,real,12
+
+alls
+etdele,1,10
+mpdele,all,1,10
+tbdele,all,1,10
+
+
+
+
+!*********************************************
+!****** Fixed Heating  ***********************
+!*********************************************
+
+finish
+alls
+/solu
+nsubst,1
+antype,trans
+!bfunif,temp,1.9
+ic,all,temp,1.9
+outres,all,last
+
+!set heat load 
+Pheat = 1e6   !w/m^3
+cmsel,s,cond
+alls,below,area
+bfe,all,hgen,,Pheat
+
+!set ramp parameters 
+dt1 = 1e-5   
+tf1 = 5e-3
+nstp1 = tf1/dt1
+
+*do,i,1,nstp1
+  tt%i% = dt1*i
+*enddo
+
+!set ramp parameters 
+dt2 = 5e-3   
+tf2 = 1.0
+nstp2 = (tf2-tf1)/dt2
+
+nstp = nstp1 + nstp2
+
+*do,i,(nstp1+1),nstp
+  tt%i% = tf1 + dt2*(i-nstp1)
+*enddo
+
+
+
+
+!solve a first load step which should be very close to starting temp
+time,1e-10
+nsubst,1
+solve
+
+autots,on
+deltim,5e-6,1e-6,1e-5,on
+*do,i,1,nstp
+! time,dt*i
+ time,tt%i%
+! ctime = dt*i
+
+!  nsubst,1
+	*if,i,gt,5,then
+		deltim,5e-4,5e-4,1e-3,on	
+	*endif
+  alls
+!	ldread,hgen,,,ctime,,udf_dipole_mag,rmg
+	alls
+  solve
+*enddo
+
+
+
+finish
+/post1
+alls
+plnsol,temp
+
+
+/DELETE,Therm_v_t,txt
+*cfopen,Therm_v_t,txt
+
+csys,0
+!*do,i,1,nstp
+*do,i,1,(nstp+1)
+	set,i
+	
+
+  /input,002_sum_101_therm,txt
+	
+!	tm = dt*i
+	*get,tm,active,0,set,time
+	*vwrite,tm,Tsave,Bsave,CvCuave,CvNb3Snave,CvG10ave,Cvmixave,kcuave,kmixave,
+(9(ES16.7))
+
+*enddo
+*cfclose
+
+
+
+
+/eof
+
+
+/DELETE,Therm_v_t,txt
+*cfopen,Therm_v_t,txt
+*do,i,1,nstp
+	*vwrite,tm%i%,Tsave%i%
+(2(ES16.7))
+*enddo
+*cfclose
+
+
+
+
+/eof
+
+
+
+finish
+/post1
+alls
+plnsol,b,y
+plnsol,b,sum
+csys,0
+
+save
+
+
+*do,i,1,nstp
+	set,i
+	
+	
+  /input,001_sum_u102_flux,txt,
+  /input,002_sum_nmisc_M_HT0,txt
+!sets
+!flux102sum = flux102sum*nturns*dirz/(across1+across2+across3)
+!*set,Lflux,flux102sum/I0
+	
+	I0%i% = dI*i
+!	I0%i% = I0f  !constant current
+	flux102sum%i% = flux102sum
+  Lflux%i% = flux102sum/I0%i%
+  MXave%i% = Mxave
+	Myave%i% = Myave
+	Bsave%i% = Bsave
+	rhoave%i% = rhoave
+	PPsumALL%i% = PPsumALL
+	PPtotsum%i% = PPtotsum
+	PPtausum%i% = PPtausum
+	PPtausumALL%i% = PPtausumALL
+!  Lflux%i% = Lflux
+	flux102sum%i% = flux102sum
+	tm%i% = dt*i
+	alls
+	plnsol,b,sum
+	*get,Bmax%i%,plnsol,0,max
+*enddo
+
+/output,
+
+/DELETE,Mag_v_t,txt
+*cfopen,Mag_v_t,txt
+*do,i,1,nstp
+	*vwrite,I0%i%,flux102sum%i%,Lflux%i%,Bsave%i%,tm%i%,Mxave%i%,Myave%i%,PPtausum%i%,PPtausumALL%i%,PPtotsum%i%,PPsumALL%i%,rhoave%i%
+(12(ES16.7))
+*enddo
+*cfclose
+
+
+
+/eof
+
+
+
+
+!*********************************************
+!****** Static Solution   ********************
+!*********************************************
+
+finish
+alls
+/solu
+
+time,1
+nsubst,1
+alls
+solve
+
+finish
+/post1
+alls
+plnsol,b,y
+plnsol,b,sum
+/eof
+
+

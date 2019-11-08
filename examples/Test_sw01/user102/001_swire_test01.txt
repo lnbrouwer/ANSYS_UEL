@@ -1,0 +1,327 @@
+!*******************************************************
+!********** CERN Benchmarking **************************
+!*******************************************************
+
+/title, udf_swire
+/prep7
+
+!********** Options *******************************
+!*afun,rad
+pi=acos(-1)
+*afun,deg
+!/UIS,MSGPOP,4  !suppress warnings
+/NERR,,99999999,     ! changes # of error and warnings to prevent crashing for large # of warnings
+!**************************************************
+
+/title, udf_swire
+
+
+!**************************************************
+!****** Material Properties (SI - magnetic) *******
+!**************************************************
+
+!Coil
+mp,murx,1,1   !rel. perm.
+!Air
+mp,murx,10,1   !rel. perm.
+
+!**********EM Elements*******************************
+et,1,plane53        !2d EM: Az
+keyopt,1,1,0    
+!et,2,user102   !2d EM: Az,cur,emf (stranded circu)   
+!**************************************************
+
+et,2,user102
+keyopt,2,1,0         ! AZ only
+keyopt,2,2,0         ! no transfer to therm
+keyopt,2,3,1         ! LBNL Jc fit (not applicable since  key(7)=1)
+keyopt,2,5,0         ! table/fixed for rsvx (not applicable since  key(7)=1)
+keyopt,2,7,1         ! force superconducting
+keyopt,2,8,2         ! yes IFCC, with fixed tau from real 11
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! wire and air parameters
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+mshsz = .15   !works with no triangles
+mshsz = .25   !works with no triangles
+mshsz = .015   !fails, even with no triangles, even with 5x mesh size for outer
+mshsz = .07
+
+rair = 0.05   !airboundary
+
+!strand radius
+rwire = 0.8/2000
+
+!percentage for box for mapped mesh
+pbox = .4
+
+
+csys,0
+k,98000,-rwire*pbox,-rwire*pbox,0
+k,98001,-rwire*pbox,rwire*pbox,0
+k,98002,rwire*pbox,rwire*pbox,0
+k,98003,rwire*pbox,-rwire*pbox,0
+l,98000,98001
+l,98001,98002
+l,98002,98003
+l,98003,98000
+
+lsel,s,line,,1,4
+al,all
+asll,s,1
+cm,wire,area
+
+
+
+csys,1
+k,92000,rwire,45,0
+k,92001,rwire,45+90,0
+k,92002,rwire,45+180,0
+k,92003,rwire,45+270,0
+
+csys,1
+l,92000,92001
+l,92001,92002
+l,92002,92003
+l,92003,92000
+
+alls
+ksel,r,loc,y,44,46
+*get,k1,kp,0,nxth
+*get,k2,kp,k1,nxth
+l,k1,k2
+
+alls
+ksel,r,loc,y,44+90,46+90
+*get,k1,kp,0,nxth
+*get,k2,kp,k1,nxth
+l,k1,k2
+
+alls
+ksel,r,loc,y,44+180,46+180
+*get,k1,kp,0,nxth
+*get,k2,kp,k1,nxth
+l,k1,k2
+
+alls
+ksel,r,loc,y,44+270,46+270
+*get,k1,kp,0,nxth
+*get,k2,kp,k1,nxth
+l,k1,k2
+
+
+alls
+lsel,r,loc,y,-46,46
+al,all
+alls
+lsel,r,loc,y,-46+90,46+90
+al,all
+alls
+lsel,r,loc,y,-46+180,46+180
+al,all
+alls
+lsel,r,loc,y,-46+270,46+270
+al,all
+
+alls
+cm,wire,area
+
+
+
+
+
+csys,0
+k,99000,-rair,-rair,0
+k,99001,-rair,rair,0
+k,99002,rair,rair,0
+k,99003,rair,-rair,0
+l,99000,99001
+l,99001,99002
+l,99002,99003
+l,99003,99000
+
+ksel,s,kp,,99000,99003
+lslk,s,1
+al,all
+asll,s,1
+cm,air,area
+
+alls
+asba,air,wire,,delete,keep
+cmsel,u,wire
+cm,air,area
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! mesh
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+!set line divisions on outer boundary
+cmsel,s,wire
+alls,below,area
+cm,gl,line
+cmsel,s,air
+alls,below,area
+cmsel,u,gl
+lesize,all,,,40
+
+
+alls
+aatt,10  
+cmsel,s,wire
+!cmsel,a,air
+aatt,1
+
+
+
+!!!!!!!!!!!!!!
+! wire reals
+!!!!!!!!!!!!!!
+
+cmsel,s,wire
+alls,below,area
+
+!set real constants
+fcond = 1.0
+fsc=0.4
+tau = 1.5e-3   !1.5 ms fixed tau
+scIFCC = 1.0
+
+R,2,0,0,fcond,fsc,0,   !set real constants
+Rmore,0,0,0,0,tau,scIFCC 
+
+!R,2,across,nturns,fcond,fsc,curdir,Lc   !set real constants
+!Rmore,Li,RRR,Lp,feff,Ctau,TauMult
+!Rmore,Jc0,Tc0,Bc0,afit,pfit,scIFCU
+
+
+!!!!!!!!!!!!!!
+! mesh
+!!!!!!!!!!!!!!
+
+cmsel,s,wire
+alls,below,area
+lsel,r,line,,1,4
+lesize,all,,,10
+alls,below,area
+lsel,u,line,,1,8
+lesize,all,,,8
+mshkey,1
+mshape,0
+esize,mshsz/5
+type,2
+real,2
+mat,1
+amesh,all
+
+
+r,1,
+cmsel,s,air
+mshkey,3
+mshape,0
+esize,mshsz
+type,1
+real,1
+mat,10
+amesh,all
+
+
+
+!**************************************************
+!********** Solution **************
+!**************************************************
+finish
+/solu
+tref,293
+
+!couple all coincident nodes in Az
+alls
+alls,below,area
+cpintf,az,1e-7,
+alls
+
+!define bc nodes
+cmsel,s,wire
+alls,below,area
+cm,gl,line
+cmsel,s,air
+alls,below,area
+cmsel,u,gl
+nsll,s,1
+cm,nBC,node
+
+
+	
+
+
+/solu
+antype,trans
+nstp = 400
+dt = 2.0e-5
+dbdt = 2.0
+nsubst,1
+
+*do,i,1,nstp
+	time,dt*i
+	cmsel,s,nBC
+	*set,By,i*dt*dbdt
+	*get,n1,node,,count
+	*do,j,1,n1
+	 *get,nmin%j%,node,0,nxth
+	 *get,xmin%j%,node,nmin%j%,loc,x
+	 *get,ymin%j%,node,nmin%j%,loc,y
+	 d,nmin%j%,az,-By*xmin%j%
+	 nsel,u,node,,nmin%j%
+	*enddo
+	
+	alls
+
+	solve
+*enddo
+
+
+
+
+alls
+finish
+/post1
+plnsol,b,y
+
+finish
+/post1
+alls
+plnsol,b,y
+plnsol,b,sum
+
+!/output,sol_track,txt
+
+csys,0
+*do,i,1,nstp
+	set,i
+	*set,By,i*dt*dbdt
+  /input,002_sum_nmisc_M_HT0,txt
+
+  MXave%i% = Mxave
+	Myave%i% = Myave
+	Hyave%i% = Hyave
+	Bsave%i% = Bsave
+	PPtauave%i% = PPtauave
+	PPtausumALL%i% = PPtausumALL
+	tm%i% = dt*i
+	alls
+	plnsol,b,sum
+	*get,Bmax%i%,plnsol,0,max
+*enddo
+
+!/output,
+
+/DELETE,Mag_v_t,txt
+*cfopen,Mag_v_t,txt
+*do,i,1,nstp
+	*vwrite,dbdt,tau,fcond,Hyave%i%,Bsave%i%,tm%i%,Mxave%i%,Myave%i%,PPtauave%i%,
+(9(ES16.7))
+*enddo
+*cfclose

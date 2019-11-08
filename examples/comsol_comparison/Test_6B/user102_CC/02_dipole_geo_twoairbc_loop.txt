@@ -1,0 +1,443 @@
+/prep7
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! paramters - from CERN note 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+aw = 1.5/1000.0
+bw = 15.0/1000.0
+!dx = 1.5/1000.0
+!x0 = 10.0/1000.0
+!y0 = 5.0/1000.0
+
+dx = 0.5/1000.0
+x0 = 15/1000.0
+y0 = 1.0/1000.0
+
+
+
+rfe = 60.0/1000.0
+dfe = 40.0/1000.0
+
+rbc = (rfe+dfe)*2.0
+rbc = 1.0   !match with cern
+
+nc1 = 14
+nc2 = nc1+4
+
+nc = nc1   ! 9 turns
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+*do,i,1,nc
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	! make the rectangle of the ith cable
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	*set,xc,x0+dx*(i-1)+aw*(i-1)+aw/2.0
+	*set,yc,y0+bw/2.0
+	*set,h,bw
+	*set,w,aw
+
+	!resets numbering to highest number currently
+	alls
+	numcmp,area
+	numcmp,line
+	numcmp,kp
+	*get,knum,kp,,num,max
+	*get,lnum,line,,num,max
+	*get,anum,area,,num,max
+	numstr,kp,knum
+	numstr,line,lnum
+	numstr,area,anum
+
+
+	!make keypoints
+	k,knum+1,xc-w/2.0,yc-h/2.0,
+	k,knum+2,xc-w/2.0,yc+h/2.0,
+	k,knum+3,xc+w/2.0,yc+h/2.0,
+	k,knum+4,xc+w/2.0,yc-h/2.0,
+
+	!make lines
+	l,knum+1,knum+2
+	l,knum+2,knum+3
+	l,knum+3,knum+4
+	l,knum+4,knum+1
+
+	!make retangular area
+	lsel,s,line,,lnum+1,lnum+4
+	al,all
+	asel,s,area,,anum+1
+	cm,cond%i%,area       !name the area
+*enddo
+
+
+!name conductor 
+cmsel,s,cond1
+*do,i,2,nc
+	cmsel,a,cond%i%
+*enddo
+cm,cond,area
+cm,coil1,area
+
+
+cmsel,s,cond1
+cm,HT0,area
+
+!make a 2nd coil shifted up and over
+
+x0 = x0 - aw*4 - dx*4
+y0 = y0+1.0/1000.0 + bw
+nc = nc2  ! 9 turns
+
+*do,i,1,nc
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	! make the rectangle of the ith cable
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	*set,xc,x0+dx*(i-1)+aw*(i-1)+aw/2.0
+	*set,yc,y0+bw/2.0
+	*set,h,bw
+	*set,w,aw
+
+	!resets numbering to highest number currently
+	alls
+	numcmp,area
+	numcmp,line
+	numcmp,kp
+	*get,knum,kp,,num,max
+	*get,lnum,line,,num,max
+	*get,anum,area,,num,max
+	numstr,kp,knum
+	numstr,line,lnum
+	numstr,area,anum
+
+
+	!make keypoints
+	k,knum+1,xc-w/2.0,yc-h/2.0,
+	k,knum+2,xc-w/2.0,yc+h/2.0,
+	k,knum+3,xc+w/2.0,yc+h/2.0,
+	k,knum+4,xc+w/2.0,yc-h/2.0,
+
+	!make lines
+	l,knum+1,knum+2
+	l,knum+2,knum+3
+	l,knum+3,knum+4
+	l,knum+4,knum+1
+
+	!make retangular area
+	lsel,s,line,,lnum+1,lnum+4
+	al,all
+	asel,s,area,,anum+1
+	cm,cond%i%,area       !name the area
+*enddo
+
+
+!name conductor 
+cmsel,s,cond1
+*do,i,2,nc
+	cmsel,a,cond%i%
+*enddo
+cm,cond,area
+cm,coil2,area
+cmsel,a,coil1
+cm,cond,area
+
+cmsel,s,HT0
+cm,cond1,area
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! make air
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!resets numbering to highest number currently
+alls
+numcmp,area
+numcmp,line
+numcmp,kp
+*get,knum,kp,,num,max
+*get,lnum,line,,num,max
+*get,anum,area,,num,max
+numstr,kp,knum
+numstr,line,lnum
+numstr,area,anum
+
+
+!make keypoints
+k,knum+1,0,0,
+k,knum+2,0,rfe,
+k,knum+3,rfe,0,
+
+
+!make lines
+l,knum+1,knum+2
+csys,1
+l,knum+2,knum+3
+csys,0
+l,knum+3,knum+1
+
+!make area
+lsel,s,line,,lnum+1,lnum+3
+al,all
+asel,s,area,,anum+1
+cm,air,area       !name the area
+
+!cut out conductor 
+cmsel,s,cond
+cmsel,a,air
+alls,below,area
+asba,air,cond,,delete,keep
+cmsel,u,cond
+cm,air,area
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! make yoke
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!resets numbering to highest number currently
+alls
+numcmp,area
+numcmp,line
+numcmp,kp
+*get,knum,kp,,num,max
+*get,lnum,line,,num,max
+*get,anum,area,,num,max
+numstr,kp,knum
+numstr,line,lnum
+numstr,area,anum
+
+
+!make keypoints
+k,knum+1,0,rfe+dfe,
+k,knum+2,rfe+dfe,0,
+alls
+csys,1
+ksel,r,loc,x,rfe-.1/1000, rfe+dfe+.1/1000
+csys,0
+cm,gk,kp
+
+cmsel,s,gk
+ksel,r,loc,y,0
+*get,k1,kp,,num,min
+
+cmsel,s,gk
+ksel,r,loc,x,0
+*get,k2,kp,,num,min
+
+cmsel,s,gk
+csys,0
+l,k2,knum+1
+csys,1
+l,knum+1,knum+2
+csys,0
+l,k1,knum+2
+
+!make area
+cmsel,s,gk
+lslk,s,1
+al,all
+asel,s,area,,anum+1
+cm,yoke,area       !name the area
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! make b.c. air
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+rbcold = rbc
+rbc = rfe+dfe + 100e-3
+rbc1 = rbc
+
+!resets numbering to highest number currently
+alls
+numcmp,area
+numcmp,line
+numcmp,kp
+*get,knum,kp,,num,max
+*get,lnum,line,,num,max
+*get,anum,area,,num,max
+numstr,kp,knum
+numstr,line,lnum
+numstr,area,anum
+
+
+!make keypoints
+k,knum+1,0,rbc,
+k,knum+2,rbc,0,
+alls
+csys,1
+ksel,r,loc,x,rfe+dfe-.1/1000, rbc+.1/1000
+csys,0
+cm,gk,kp
+
+cmsel,s,gk
+ksel,r,loc,y,0
+*get,k1,kp,,num,min
+
+cmsel,s,gk
+ksel,r,loc,x,0
+*get,k2,kp,,num,min
+
+cmsel,s,gk
+csys,0
+l,k2,knum+1
+csys,1
+l,knum+1,knum+2
+csys,0
+l,k1,knum+2
+
+!make area
+cmsel,s,gk
+lslk,s,1
+al,all
+asel,s,area,,anum+1
+cm,airfar,area       !name the area
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! make b.c. air #2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ri = rbc
+rbc = rbcold
+
+
+!resets numbering to highest number currently
+alls
+numcmp,area
+numcmp,line
+numcmp,kp
+*get,knum,kp,,num,max
+*get,lnum,line,,num,max
+*get,anum,area,,num,max
+numstr,kp,knum
+numstr,line,lnum
+numstr,area,anum
+
+
+!make keypoints
+k,knum+1,0,rbc,
+k,knum+2,rbc,0,
+alls
+csys,1
+ksel,r,loc,x,ri-.1/1000, rbc+.1/1000
+csys,0
+cm,gk,kp
+
+cmsel,s,gk
+ksel,r,loc,y,0
+*get,k1,kp,,num,min
+
+cmsel,s,gk
+ksel,r,loc,x,0
+*get,k2,kp,,num,min
+
+cmsel,s,gk
+csys,0
+l,k2,knum+1
+csys,1
+l,knum+1,knum+2
+csys,0
+l,k1,knum+2
+
+!make area
+cmsel,s,gk
+lslk,s,1
+al,all
+asel,s,area,,anum+1
+cm,airfar2,area       !name the area
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! mesh 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+type,1
+real,1
+
+
+!mesh the conductor 
+cmsel,s,cond
+alls,below,area
+mshkey,1        !map
+mshape,0        !quadrilaterals
+esize,0.35/1000.0  !size of element
+!esize,0.25/1000.0  !size of element
+!esize,0.1/1000.0  !size of element
+mat,1
+amesh,all
+
+
+!mesh the yoke
+cmsel,s,yoke
+alls,below,area
+mshkey,1        !map
+mshape,0        !quadrilaterals
+esize,1.2/1000.0  !size of element
+!esize,1.0/1000.0  !size of element
+!esize,0.8/1000.0  !size of element
+mat,4
+amesh,all
+
+
+!mesh the inner air
+cmsel,s,air
+alls,below,area
+mshkey,0        !free
+mshape,0        !quadrilaterals
+esize,0.85/1000.0  !size of element
+!esize,0.65/1000.0  !size of element
+!esize,0.45/1000.0  !size of element
+mat,10
+amesh,all
+
+
+!mesh the B.C air
+cmsel,s,airfar
+alls,below,area
+esize,3.0/1000.0  !size of element
+mat,10
+! div lines
+csys,1
+lsel,r,loc,x,rbc1-.1/1000,rbc1+.1/1000
+!lesize,all,,,30
+lesize,all,,,30
+alls,below,area
+csys,0
+lsel,r,loc,x,0
+lesize,all,,,32,5/1
+alls,below,area
+lsel,r,loc,y,0
+lesize,all,,,32,5/1
+amesh,all
+
+
+
+!mesh the B.C air
+cmsel,s,airfar2
+alls,below,area
+esize,3.0/1000.0  !size of element
+mat,10
+! div lines
+csys,1
+lsel,r,loc,x,rbc-.1/1000,rbc+.1/1000
+!lesize,all,,,30
+lesize,all,,,30
+alls,below,area
+csys,0
+lsel,r,loc,x,0
+lesize,all,,,32,10/1
+alls,below,area
+lsel,r,loc,y,0
+lesize,all,,,32,10/1
+amesh,all
+
+
+cmsel,s,airfar
+cmsel,a,airfar2
+cm,airfar,area
+
+/eof
+

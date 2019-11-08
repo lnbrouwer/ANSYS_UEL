@@ -1,0 +1,62 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Time-Hist Post-Process
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+finish
+/post26
+lines,10000    !avoid repeating headers < 1000 lines
+numvar,100    !set number of variables great than the default of 10
+In = 10     !start esol numbering at 10
+/input,07_ansys_coil_post26_circu_v2,txt
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Post1 Loop
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+finish
+/post1
+cmsel,s,cond
+set,last,
+*get,nset,active,0,set,NSET
+plnsol,b,y
+plnsol,b,sum
+csys,0
+
+
+
+/output,
+
+!find the yoke energy for the first and last step
+/uis,msgpop,4     !only error msg
+set,first
+cmsel,s,yoke
+alls,below,area
+senergy,0
+eyokeI = S_ENG
+set,last
+cmsel,s,yoke
+alls,below,area
+senergy,0
+eyokeF = S_ENG
+
+
+
+
+
+/DELETE,Mag_v_t,txt
+*cfopen,Mag_v_t,txt
+
+set,first
+*do,i,1,nset
+  /input,002_sum_nmisc_M_HT0,txt
+!	EngA = eother + eyoke%i%
+	EngA = eother 
+  *get,tm,active,0,set,time
+	*vwrite,tm,flux102sum,EngA,eyokeI,eyokeF,tauave,Mxave,Myave,PPtausum,PPtausumALL,
+(10(ES16.7))
+	set,next
+*enddo
+
+*cfclose

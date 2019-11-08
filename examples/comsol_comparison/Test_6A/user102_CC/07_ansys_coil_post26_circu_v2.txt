@@ -1,0 +1,226 @@
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! time history post processor
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+/post26
+!file,field1,rst
+!lines,1000    !avoid repeating headers < 1000 lines                    !!!NOW DONE IN MAIN SCRIPT
+!numvar,100    !set number of variables great than the default of 10
+
+!In = 10     !start numbering at 10, NOW DONE IN MAIN SCRIPT
+
+cmsel,s,coil2
+alls,below,area
+*get,nc2,node,0,nxth
+cmsel,s,coil1
+alls,below,area
+*get,nc1,node,0,nxth
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! coil current/voltages
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!coil 2
+nsel,s,node,,nnode+1,nnode+2
+nsel,a,node,,nc2
+esln,s,1
+*get,enum,elem,0,nxth         !get node # to connect FEA region to circuit
+esol,In+1,enum,,nmisc,1,P2      !power
+esol,In+2,enum,,smisc,1,V2      !voltage
+esol,In+3,enum,,smisc,2,I2      !current
+
+
+!coil 2
+nsel,s,node,,nnode+2,nnode+3
+nsel,a,node,,nc1
+esln,s,1
+*get,enum,elem,0,nxth         !get node # to connect FEA region to circuit
+esol,In+4,enum,,nmisc,1,P1      !power
+esol,In+5,enum,,smisc,1,V1      !voltage
+esol,In+6,enum,,smisc,2,I1      !current
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Dump Resistors
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! Dump res
+nsel,s,node,,nnode+5,nnode+6
+esln,s,1
+*get,enum,elem,0,nxth         !get node # to connect FEA region to circuit
+esol,In+7,enum,,nmisc,1,PR      !power
+esol,In+8,enum,,smisc,1,VR      !voltage
+esol,In+9,enum,,smisc,2,IR      !current
+
+
+! Cliq Res
+nsel,s,node,,nnode+11
+nsel,a,node,,nnode+7
+esln,s,1
+*get,enum,elem,0,nxth         !get node # to connect FEA region to circuit
+esol,In+10,enum,,nmisc,1,PRC      !power
+esol,In+11,enum,,smisc,1,VRC      !voltage
+esol,In+12,enum,,smisc,2,IRC      !current
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Sources
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+nsel,s,node,,nnode+4,nnode+5
+nsel,a,node,,nnode+12
+esln,s,1
+*get,enum,elem,0,nxth         !get node # to connect FEA region to circuit
+esol,In+13,enum,,nmisc,1,PS      !power
+esol,In+14,enum,,smisc,1,VS      !voltage
+esol,In+15,enum,,smisc,2,IS      !current
+
+
+
+nsel,s,node,,nnode+8,nnode+9
+nsel,a,node,,nnode+13
+esln,s,1
+*get,enum,elem,0,nxth         !get node # to connect FEA region to circuit
+esol,In+16,enum,,nmisc,1,PSC      !power
+esol,In+17,enum,,smisc,1,VSC      !voltage
+esol,In+18,enum,,smisc,2,ISC      !current
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Capacitors
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+nsel,s,node,,nnode+10,nnode+11
+esln,s,1
+*get,enum,elem,0,nxth         !get node # to connect FEA region to circuit
+esol,In+19,enum,,nmisc,1,PC      !power
+esol,In+20,enum,,smisc,1,VC      !voltage
+esol,In+21,enum,,smisc,2,IC      !current
+
+
+
+
+
+
+In=In+65
+
+
+
+/output,junk,txt,
+prvar,P1,P2,PR,PRC,PS,PSC
+/output
+
+/output,power1,txt,
+prvar,P1,P2,PR,PRC,PS,PSC
+/output
+
+/output,voltage1,txt,
+prvar,V1,V2,VR,VRC,VS,VSC
+/output
+
+/output,current1,txt,
+prvar,I1,I2,IR,IRC,IS,ISC
+/output
+
+
+
+/output,voltage2,txt,
+prvar,VC,VC,VC,VC,VC,VC
+/output
+
+/output,current2,txt,
+prvar,IC,IC,IC,IC,IC,IC
+/output
+
+
+
+
+/eof
+
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Output Some of the Uel Info for a specific Element (high field)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+epick = 1  
+
+esel,s,elem,,epick
+alls,below,elem
+esol,In+19,epick,,nmisc,1,tev
+esol,In+20,epick,,nmisc,2,Bev
+esol,In+21,epick,,nmisc,6,qflag
+esol,In+22,epick,,nmisc,10,tau
+esol,In+23,epick,,nmisc,11,Jres
+esol,In+24,epick,,nmisc,12,Jtau
+esol,In+25,epick,,nmisc,13,Jtot
+esol,In+26,epick,,nmisc,14,Ifcu
+esol,In+27,epick,,nmisc,15,RRRO
+esol,In+28,epick,,nmisc,16,fscO
+esol,In+29,epick,,nmisc,17,fcondO
+esol,In+30,epick,,nmisc,18,rsvxO
+esol,In+43,epick,,nmisc,21,Mx
+esol,In+44,epick,,nmisc,22,My
+esol,In+45,epick,,nmisc,23,dBdt
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Output Some of the Uel Info for a specific Element (low field)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+epick = 758
+
+esel,s,elem,,epick
+alls,below,elem
+esol,In+50,epick,,nmisc,1,tevL
+esol,In+51,epick,,nmisc,2,BevL
+esol,In+52,epick,,nmisc,6,qflagL
+esol,In+53,epick,,nmisc,10,tauL
+esol,In+54,epick,,nmisc,11,JresL
+esol,In+55,epick,,nmisc,12,JtauL
+esol,In+56,epick,,nmisc,13,JtotL
+esol,In+57,epick,,nmisc,14,IfcuL
+esol,In+58,epick,,nmisc,15,RRROL
+esol,In+59,epick,,nmisc,16,fscOL
+esol,In+60,epick,,nmisc,17,fcondOL
+esol,In+61,epick,,nmisc,18,rsvxOL
+esol,In+62,epick,,nmisc,21,MxL
+esol,In+63,epick,,nmisc,22,MyL
+esol,In+64,epick,,nmisc,23,dBdtL
+
+
+
+/output,nmisc,txt,
+prvar,tev,Bev,qflag,tau,Jres,Jtau
+/output
+
+
+/output,nmisc_2,txt,
+prvar,Jtot,Ifcu,RRRO,fscO,fcondO,rsvxO
+/output
+
+/output,nmisc_3,txt,
+prvar,Mx,My,dBdt,Mx,My,dBdt
+/output
+
+
+
+
+/output,nmiscL,txt,
+prvar,tevL,BevL,qflagL,tauL,JresL,JtauL
+/output
+
+
+/output,nmisc_2L,txt,
+prvar,JtotL,IfcuL,RRROL,fscOL,fcondOL,rsvxOL
+/output
+
+
+/output,nmisc_3L,txt,
+prvar,MxL,MyL,dBdtL,MxL,MyL,dBdtL
+/output
+
+
+
+

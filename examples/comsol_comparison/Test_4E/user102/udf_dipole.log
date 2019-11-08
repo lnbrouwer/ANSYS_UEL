@@ -1,0 +1,33 @@
+/BATCH  
+/COM,ANSYS RELEASE Release 17.1      BUILD 17.1      UP20160404       18:10:02
+/BATCH  
+/COM,ANSYS RELEASE Release 17.1      BUILD 17.1      UP20160404       09:11:19
+/input,menust,tmp,''
+/GRA,POWER
+/GST,ON
+/PLO,INFO,3
+/GRO,CURL,ON
+/CPLANE,1   
+/REPLOT,RESIZE  
+WPSTYLE,,,,,,,,0
+/REPLOT,RESIZE  
+RESUME  
+/COM,ANSYS RELEASE Release 17.1      BUILD 17.1      UP20160404       09:11:28
+/INPUT,'finish','txt','D:\ansys_UDF_dist_v2\02_CERN_benchmarking_v11_clean\Test_4E\user102\',, 0
+FINISH  
+! /EXIT,NOSAV   
+/BATCH  
+/COM,ANSYS RELEASE Release 17.1      BUILD 17.1      UP20160404       09:54:07
+/input,menust,tmp,''
+/GRA,POWER
+/GST,ON
+/PLO,INFO,3
+/GRO,CURL,ON
+/CPLANE,1   
+/REPLOT,RESIZE  
+/REPLOT,RESIZE  
+WPSTYLE,,,,,,,,0
+/REPLOT,RESIZE  
+/REPLOT,RESIZE  
+FINISH  
+! /EXIT,NOSAV   

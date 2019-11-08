@@ -1,0 +1,298 @@
+!*******************************************************
+!********** CERN Benchmarking **************************
+!*******************************************************
+
+/title, udf_dipole_mag
+/prep7
+
+!********** Options *******************************
+!*afun,rad
+pi=acos(-1)
+*afun,deg
+!/UIS,MSGPOP,4  !suppress warnings
+/NERR,,99999999,     ! changes # of error and warnings to prevent crashing for large # of warnings
+!**************************************************
+
+
+
+
+!**************************************************
+!****** Material Properties (SI - magnetic) *******
+!**************************************************
+
+!Coil
+mp,murx,1,1   !rel. perm.
+mp,rsvx,1,(1.0e-8)/pi      ! from Lorenzo
+!Air
+mp,murx,10,1   !rel. perm.
+
+!Iron (4)  bh table from cern
+tb,bh,4,, 44
+TBPT,,0.000000,0.000000 
+TBPT,,7.941832,0.007120 
+TBPT,,15.883663,0.016700 
+TBPT,,23.825495,0.029250 
+TBPT,,31.767326,0.045220 
+TBPT,,47.531623,0.088910 
+TBPT,,63.367539,0.154340 
+TBPT,,79.219371,0.240660 
+TBPT,,158.812757,0.765070 
+TBPT,,317.649387,1.296830 
+TBPT,,475.180947,1.452170 
+TBPT,,633.627647,1.520430 
+TBPT,,792.106179,1.558410 
+TBPT,,1192.094374,1.609540 
+TBPT,,1589.758907,1.638920 
+TBPT,,1987.081257,1.660550 
+TBPT,,2386.281635,1.678260 
+TBPT,,2782.290957,1.694270 
+TBPT,,3179.493941,1.708280 
+TBPT,,3577.039107,1.721750 
+TBPT,,3971.377302,1.734140 
+TBPT,,4765.210312,1.757060 
+TBPT,,5559.099026,1.778050 
+TBPT,,6354.069994,1.797640 
+TBPT,,7149.486595,1.815670 
+TBPT,,7944.083548,1.833300 
+TBPT,,10590.000000,1.850000 
+TBPT,,13160.000000,1.900000 
+TBPT,,21170.000000,2.000000 
+TBPT,,33760.000000,2.100000 
+TBPT,,66000.000000,2.200000 
+TBPT,,120960.000000,2.280000 
+TBPT,,169600.000000,2.344300 
+TBPT,,212170.000000,2.399600 
+TBPT,,283130.000000,2.490500 
+TBPT,,339890.000000,2.562700 
+TBPT,,425040.000000,2.670600 
+TBPT,,566950.000000,2.849800 
+TBPT,,850760.000000,3.207400 
+TBPT,,1702300.000000,4.278200 
+TBPT,,2128000.000000,4.813400 
+TBPT,,2837700.000000,5.705200 
+TBPT,,3405100.000000,6.418600 
+TBPT,,4256700.000000,7.488700
+TBPLOT,bh,4,
+
+
+!**********EM Elements*******************************
+et,1,plane53        !2d EM: Az
+keyopt,1,1,0    
+!et,2,user102   !2d EM: Az,cur,emf (stranded circu)   
+!**************************************************
+
+et,2,user102
+keyopt,2,1,0         ! AZ only
+keyopt,2,2,0         ! no transfer to therm
+keyopt,2,3,1         ! LBNL Jc fit (not applicable since  key(7)=1)
+keyopt,2,5,0         ! table/fixed for rsvx (not applicable since  key(7)=1)
+keyopt,2,7,2         ! force fully quenched
+keyopt,2,8,1         ! no IFCC
+
+
+!/input,02_dipole_geo_twoairbc_dense,txt,
+/input,02_dipole_geo_twoairbc_loop,txt,
+
+
+
+!set real constants
+nstrand = 40
+ds = 0.75e-3
+fcond = nstrand*ds*ds*pi/(4*aw*bw)
+fsc=0.4
+scIFCU = 1.0 
+save,geo,db
+
+R,2,0,0,fcond,fsc,0,   !set real constants
+Rmore,0,0,0,0,0,0
+Rmore,0,0,0,0,0,scIFCU
+
+!name conductor 
+cmsel,s,cond1
+*do,i,2,nc
+	cmsel,a,cond%i%
+*enddo
+alls,below,area
+emodif,all,type,2
+emodif,all,real,2
+emodif,all,mat,1
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! find coil areas
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!apply Je
+*do,i,1,nc
+		cmsel,s,cond%i%
+		alls,below,area
+		asum
+		*get,across%i%,area,all,area
+*enddo
+	
+cmsel,s,cond
+alls,below,area
+asum
+*get,across,area,all,area
+
+!******************************************
+!********** B.C ***************************
+!******************************************
+
+!cp az across coil boundaries
+alls
+alls,below,area
+cpintf,az,1e-7
+
+
+! Set boundary conditions of the magnetic vector potential
+alls
+csys,0
+lsel,r,loc,x,0
+nsll,s,1
+d,all,az,0
+
+alls
+csys,1
+lsel,r,loc,x,rbc
+nsll,s,1
+d,all,az,0
+
+
+!!!!! TURN OFF IRON YOKE
+!cmsel,s,yoke
+!alls,below,area
+!emodif,all,mat,1
+
+!*********************************************
+!****** Linear Ramp   ************************
+!*********************************************
+
+finish
+alls
+/solu
+nsubst,1
+antype,trans
+bfunif,temp,1.9
+outres,all,last
+
+!only output solution for cond for comparison
+cmsel,s,cond
+alls,below,area
+cm,esolu,elem
+cm,nsolu,node
+outres,all,none
+!outres,esol,all,esolu
+!outres,nsol,all,nsolu
+outres,esol,last,esolu
+outres,nsol,last,nsolu
+
+
+!set ramp parameters 
+dt = 0.02
+dt = 0.005   !do 4x number of steps
+tf = 1.0
+I0f = 1.0e2
+
+
+
+nstp = tf/dt
+dI = I0f/nstp
+
+*do,i,1,nstp
+ time,dt*i
+
+ *set,I0,dI*i
+ 
+ !apply Je
+	*do,j,1,nc
+		 *set,Js%j%,I0/across%j%
+		  cmsel,s,cond%j%
+			alls,below,area
+			bfe,all,Js,,0,0,Js%j%
+	*enddo
+	
+  nsubst,1
+	
+  alls
+  solve
+*enddo
+
+
+
+finish
+/post1
+alls
+plnsol,b,y
+plnsol,b,sum
+csys,0
+
+save
+
+
+*do,i,1,nstp
+	set,i
+	
+	
+  /input,001_sum_u102_flux,txt,
+  /input,002_sum_nmisc_M_HT0,txt
+
+	I0%i% = dI*i
+!	I0%i% = I0f  !constant current
+	flux102sum%i% = flux102sum
+  Lflux%i% = flux102sum/I0%i%
+  MXave%i% = Mxave
+	Myave%i% = Myave
+	Bsave%i% = Bsave
+	rhoave%i% = rhoave   !cern homoginized
+
+	PPsumALL%i% = PPsumALL
+	PPtotsum%i% = PPtotsum
+	PPtausum%i% = PPtausum
+	PPtausumALL%i% = PPtausumALL
+!  Lflux%i% = Lflux
+	flux102sum%i% = flux102sum
+	tm%i% = dt*i
+	alls
+	plnsol,b,sum
+	*get,Bmax%i%,plnsol,0,max
+*enddo
+
+/output,
+
+/DELETE,Mag_v_t,txt
+*cfopen,Mag_v_t,txt
+*do,i,1,nstp
+	*vwrite,I0%i%,flux102sum%i%,Lflux%i%,Bsave%i%,tm%i%,Mxave%i%,Myave%i%,PPtausum%i%,PPtausumALL%i%,PPtotsum%i%,PPsumALL%i%,rhoave%i%
+(12(ES16.7))
+*enddo
+*cfclose
+
+
+
+/eof
+
+
+
+
+!*********************************************
+!****** Static Solution   ********************
+!*********************************************
+
+finish
+alls
+/solu
+
+time,1
+nsubst,1
+alls
+solve
+
+finish
+/post1
+alls
+plnsol,b,y
+plnsol,b,sum
+/eof
+
+

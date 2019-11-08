@@ -1,0 +1,17 @@
+!do user101 by hand -> iso,linear
+cmsel,s,tcond1
+alls,below,area
+!temp averaged over HT0
+etable,Ts,temp
+etable,area101,volu
+smult,TTs,Ts,area101,1,1
+ssum
+*get,TTssum,ssum,0,item,TTs
+*get,areasum,ssum,0,item,area101
+*set,Tsave,TTssum/areasum
+
+
+
+/eof
+
+

@@ -1,0 +1,27 @@
+
+!try to do with 
+
+cmsel,s,cond
+alls,below,area
+esel,r,ename,,102
+etable,Az102,a,z
+etable,area102,volu
+
+smult,flux102,Az102,area102,1,1
+
+ssum
+*get,Az102sum,ssum,0,item,Az102
+*get,area102sum,ssum,0,item,area102
+*get,flux102sum,ssum,0,item,flux102
+
+nturns = nc
+dirz = 1.0
+
+flux102sum = flux102sum*nturns*dirz/(across1+across2+across3)
+*set,Lflux,flux102sum/I0
+
+!ind is ~ 0.4628e-5
+
+
+!compare using uel output to etabling with Az
+!test = 100*(test1-test2)/test1

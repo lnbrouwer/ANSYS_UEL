@@ -1,0 +1,651 @@
+
+ *IF  arg2                              ( =   1.00000     )  NE  
+      1                                 ( =   1.00000     )  THEN    
+
+ *ENDIF
+
+ PARAMETER _SYMFAC =     1.000000000    
+
+ PARAMETER _SUPPRES =     1.000000000    
+
+ PARAMETER __HARM =     0.000000000    
+
+ NO ABSOLUTE VALUE ON ETABLE OPERATIONS
+
+ *IF  __harm                            ( =   0.00000     )  NE  
+      1                                 ( =   1.00000     )  THEN    
+ ### QSENERGY static
+
+ STORE _NLENE   FROM ITEM=MAEN  FOR ALL SELECTED ELEMENTS
+
+ STORE _NLCENE  FROM ITEM=MACO  FOR ALL SELECTED ELEMENTS
+
+ *ELSE
+
+ *ENDIF
+
+ STORE _VOLU    FROM ITEM=VOLU  FOR ALL SELECTED ELEMENTS
+
+ OPERATION SEXP  RESULT= MG_ENG    OPERAND1= _NLENE    OPERAND2= _VOLU   
+  FACTOR1=  1.0000       FACTOR2= -1.0000       CONSTANT=  0.0000    
+
+ OPERATION SEXP  RESULT= MG_COENG  OPERAND1= _NLCENE   OPERAND2= _VOLU   
+  FACTOR1=  1.0000       FACTOR2= -1.0000       CONSTANT=  0.0000    
+
+ SUM ALL THE ACTIVE ENTRIES IN THE ELEMENT TABLE 
+
+ TABLE LABEL     TOTAL
+ MG_ENG     270.824    
+ _VOLU     0.502655E-02
+ _BX       -24.5031    
+ _BY        23.5379    
+ _BZ        0.00000    
+ _HX       -25631.4    
+ _HY        23323.8    
+ _HZ        0.00000    
+ _BSUM      42.6292    
+ _HSUM      43942.1    
+ NONENGD   0.502655E-12
+ _SENE     0.213108E-03
+ _BXA       54.2666    
+ _NLENE    0.284269E-03
+ _NLCENE   0.245131E-03
+ MG_COENG   232.525    
+
+ *GET  _NLENE    FROM  SSUM  ITEM=ITEM _NLENE    VALUE= 0.284268559E-03
+
+ *GET  _NLCENE   FROM  SSUM  ITEM=ITEM _NLCENE   VALUE= 0.245131073E-03
+
+ PARAMETER _NLENE =    0.2842685592E-03
+
+ PARAMETER _NLCENE =    0.2451310729E-03
+
+ *IF  _suppres                          ( =   1.00000     )  NE  
+      1                                 ( =   1.00000     )  THEN    
+
+ *ENDIF
+
+ PARAMETER NLENE =    0.2842685592E-03
+
+ PARAMETER NLCENE =    0.2451310729E-03
+
+ PARAMETER _NLENE    DELETED.
+
+ PARAMETER _NLCENE   DELETED.
+
+ PARAMETER _SYMFAC   DELETED.
+
+ PARAMETER _SUPPRES  DELETED.
+
+ PARAMETER __HARM    DELETED.
+
+ PARAMETER _QLSTP    DELETED.
+
+ PARAMETER _QSBST    DELETED.
+
+ CONTENTS OF LABEL _NLENE   CLEARED FROM ELEMENT TABLE
+
+ CONTENTS OF LABEL _NLCENE  CLEARED FROM ELEMENT TABLE
+
+ CONTENTS OF LABEL _NLENER  CLEARED FROM ELEMENT TABLE
+
+ CONTENTS OF LABEL _NLENEI  CLEARED FROM ELEMENT TABLE
+
+ CONTENTS OF LABEL _VOLU    CLEARED FROM ELEMENT TABLE
+
+ *IF  arg2                              ( =   1.00000     )  NE  
+      1                                 ( =   1.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  arg1                              ( =   2.00000     )  EQ  
+      2                                 ( =   2.00000     )  THEN    
+
+ PARAMETER _NONEN(_IMAT) =    0.2842685592E-03
+
+ *ENDIF
+
+ *IF  arg1                              ( =   2.00000     )  EQ  
+      3                                 ( =   3.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  arg1                              ( =   2.00000     )  EQ  
+      -1                                ( =  -1.00000     )  THEN    
+
+ *ENDIF
+
+ *ENDDO  INDEX= _IMAT                           
+
+ *ENDIF
+
+ *IF  _nmat                             ( =   1.00000     )  GT  
+      1                                 ( =   1.00000     )  THEN    
+
+ *ENDIF
+
+ *DO LOOP ON PARAMETER= _IPY FROM  1.0000     TO  1.0000     BY  1.0000    
+
+ *DO LOOP ON PARAMETER= _IPZ FROM  1.0000     TO  3.0000     BY  1.0000    
+
+ *DO LOOP ON PARAMETER= _IPZZ FROM  1.0000     TO  4.0000     BY  1.0000    
+
+ *IF  _tynonen(_ipy,_ipz)               ( =                  )  NE  
+                                        ( =                  )  EXIT    
+
+ *DO LOOP ON PARAMETER= _IPX FROM  1.0000     TO  3.0000     BY  1.0000    
+
+ PARAMETER _TYNONEN(_IPY,_IPX) = Nonlin. 
+
+ *ENDDO  INDEX= _IPX                            
+
+ PARAMETER _TYNONEN(_IPY,4-_IPZZ+1) =         
+
+ *ENDDO  INDEX= _IPZZ                           
+
+ *ENDDO  INDEX= _IPZ                            
+
+ *ENDDO  INDEX= _IPY                            
+
+ *IF  arg1                              ( =   2.00000     )  EQ  
+      -1                                ( =  -1.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  _suminf                           ( =   0.00000     )  GT  
+      0                                 ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ *DO LOOP ON PARAMETER= _IFIX FROM  1.0000     TO  4.0000     BY  1.0000    
+
+ *IF  _tynonen(1,_ifix)                 ( = Nonlin.          )  EQ  
+                                        ( =                  )  THEN    
+
+ *ENDIF
+
+ *ENDDO  INDEX= _IFIX                           
+
+ SELECT      COMPONENT _CURELI                         
+
+ *IF  _oldsene                          ( =   0.00000     )  EQ  
+      1                                 ( =   1.00000     )  THEN    
+
+ *ENDIF
+
+ VECTOR PARAMETER OPERATION *VOPER  
+  _nonen(1)        = _nonen(1)        MULT _cgsfac         
+  VECTOR LENGTH=    4454
+
+ ABBREVIATION= _Z_WR     *vwrite,_matm(1),_numelem(1),_nonen(1),_tynonen(1,1)        
+
+ PARAMETER _PRSM1    DELETED.
+
+ SET PARAMETER DIMENSIONS ON  _PRSM1 TYPE=ARRA  DIMENSIONS=     1     2     1
+
+ PARAMETER _PRSM1(1,1) =     0.000000000    
+
+ PARAMETER _PRSM1(1,2) =     0.000000000    
+
+ PARAMETER _BLNKA    DELETED.
+
+ SET PARAMETER DIMENSIONS ON  _BLNKA TYPE=CHAR  DIMENSIONS=     1     1     1
+
+ PARAMETER _BLNKA(1) =         
+
+ *DO LOOP ON PARAMETER= _IISM1 FROM  1.0000     TO  1.0000     BY  1.0000    
+ Error count: 1.                                                         
+
+ *IF  _emat(_iism1)                     ( =   0.00000     )  EQ  
+      0                                 ( =   0.00000     )  THEN    
+
+ PARAMETER _PRSM1(1,1) =     4454.000000    
+
+ PARAMETER _PRSM1(1,2) =    0.2842685592E-03
+
+ *ENDIF
+
+ *ENDDO  INDEX= _IISM1                          
+
+ PARAMETER _IISM1 =     1.000000000    
+
+ *IF  _suminf                           ( =   0.00000     )  GT  
+      0                                 ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ PARAMETER _D_AT     DELETED.
+
+ SET PARAMETER DIMENSIONS ON  _D_AT TYPE=ARRA  DIMENSIONS=     1     3     1
+
+ *GET  _D_AT     FROM  ACTI  ITEM=SET  LSTP  VALUE=  732.000000    
+
+ *GET  _D_AT     FROM  ACTI  ITEM=SET  SBST  VALUE=  1.00000000    
+
+ *GET  _D_AT     FROM  ACTI  ITEM=SET  TIME  VALUE= 0.500000000    
+
+ *IF  arg1                              ( =   2.00000     )  EQ  
+      2                                 ( =   2.00000     )  THEN    
+
+ PARAMETER S_ENG =    0.2842685592E-03
+
+ PARAMETER C_ENG =     0.000000000    
+
+ *ELSEIF  arg1                              ( =   2.00000     )  EQ  
+          3                                 ( =   3.00000     )  THEN    
+
+ *ELSE
+
+ *ENDIF
+
+ PRINTOUT RESUMED BY /GOP
+
+ *ENDIF
+
+ SELECT      COMPONENT _CURELI                         
+
+ ALSO SELECT COMPONENT _INVALID                        
+
+ *ENDIF
+
+ *IF  _idbug                            ( =  0.788861E-30 )  EQ  
+      0                                 ( =   0.00000     )  THEN    
+
+ *IF  _altdel                           ( =  0.788861E-30 )  EQ  
+      1                                 ( =   1.00000     )  THEN    
+
+ *ELSE
+
+ ALL SELECT   FOR ITEM=ELEM COMPONENT=    
+  IN RANGE         1 TO      29365 STEP          1
+
+      29365  ELEMENTS (OF      29365  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ *GET  _ELMX     FROM  ELEM  ITEM=NUM  MAX       VALUE=  29365.0000    
+
+ SELECT      COMPONENT _CURELI                         
+
+ PARAMETER _MSKV     DELETED.
+
+ SET PARAMETER DIMENSIONS ON  _MSKV TYPE=ARRA  DIMENSIONS= 29365     1     1
+
+ SET PARAMETER DIMENSIONS ON  _NONEN TYPE=ARRA  DIMENSIONS= 29365     1     1
+
+ VECTOR GET OPERATION  _mskv(1)  VECTOR LENGTH=   29365
+ NAME= ELEM         1  ESEL      
+
+ VECTOR PARAMETER OPERATION *VOPER  
+  _mskv(1)         = _mskv(1)         GT   0               
+  VECTOR LENGTH=   29365
+
+ *IF  arg1                              ( =   2.00000     )  EQ  
+      3                                 ( =   3.00000     )  THEN    
+
+ *ELSE
+
+ SET MASK VECTOR TO  _MSKV(1:29365)
+
+ VECTOR GET OPERATION  _nonen(1)  VECTOR LENGTH=   29365
+ NAME= ELEM         1  ETAB  MG_ENG  
+
+ *ENDIF
+
+ ALL ELEMENT TABLE ITEMS ERASED
+
+ *IF  arg1                              ( =   2.00000     )  EQ  
+      3                                 ( =   3.00000     )  THEN    
+
+ *ELSE
+
+ STORE MG_ENG   FROM ITEM=VOLU  FOR ALL SELECTED ELEMENTS
+
+ OPERATION SADD  RESULT= MG_ENG    OPERAND1= MG_ENG    OPERAND2= MG_ENG  
+  FACTOR1=  1.0000       FACTOR2= -1.0000       CONSTANT=  0.0000    
+
+ SET MASK VECTOR TO  _MSKV(1:29365)
+
+ VECTOR PUT OPERATION  _nonen(1)         VECTOR LENGTH=   29365
+ NAME= ELEM         1  ETAB  MG_E
+
+ *ENDIF
+
+ *ENDIF
+
+ PARAMETER _BD       DELETED.
+
+ PARAMETER _BH       DELETED.
+
+ PARAMETER _BHI      DELETED.
+
+ PARAMETER _BXC      DELETED.
+
+ PARAMETER _ELMTD    DELETED.
+
+ PARAMETER _INV      DELETED.
+
+ PARAMETER _MAGFLG   DELETED.
+
+ PARAMETER _MURLIN   DELETED.
+
+ PARAMETER _Z        DELETED.
+
+ PARAMETER _ZC       DELETED.
+
+ PARAMETER _NONENX   DELETED.
+
+ PARAMETER _NONENS   DELETED.
+
+ PARAMETER _BYC      DELETED.
+
+ PARAMETER _BZC      DELETED.
+
+ PARAMETER _ECUELE   DELETED.
+
+ PARAMETER _NONENY   DELETED.
+
+ PARAMETER _NONENZ   DELETED.
+
+ PARAMETER _ONERR    DELETED.
+
+ PARAMETER _TPI      DELETED.
+
+ PARAMETER _UNIT     DELETED.
+
+ PARAMETER _DIMN     DELETED.
+
+ PARAMETER CHECK_    DELETED.
+
+ PARAMETER _PI       DELETED.
+
+ PARAMETER _BH10     DELETED.
+
+ PARAMETER _BH11     DELETED.
+
+ PARAMETER _BH_B     DELETED.
+
+ PARAMETER _BH_H     DELETED.
+
+ PARAMETER _D_AT1    DELETED.
+
+ PARAMETER _D_AT2    DELETED.
+
+ PARAMETER _D_AT3    DELETED.
+
+ PARAMETER _ECNT1    DELETED.
+
+ PARAMETER _ECNT2    DELETED.
+
+ PARAMETER _ELMATC   DELETED.
+
+ PARAMETER _ELMX     DELETED.
+
+ PARAMETER _ELMX2    DELETED.
+
+ PARAMETER _ESYSC2   DELETED.
+
+ PARAMETER _IBHN     DELETED.
+
+ PARAMETER _IFIX     DELETED.
+
+ PARAMETER _II       DELETED.
+
+ PARAMETER _ILEV2    DELETED.
+
+ PARAMETER _IMAT     DELETED.
+
+ PARAMETER _INUMPT   DELETED.
+
+ PARAMETER _IPX      DELETED.
+
+ PARAMETER _IPY      DELETED.
+
+ PARAMETER _IPZ      DELETED.
+
+ PARAMETER _MUZ      DELETED.
+
+ PARAMETER _MXELEM   DELETED.
+
+ PARAMETER _MX_BX    DELETED.
+
+ PARAMETER _NMAT     DELETED.
+
+ PARAMETER _RR       DELETED.
+
+ PARAMETER _RR1      DELETED.
+
+ PARAMETER _TMP1     DELETED.
+
+ PARAMETER _TMP2     DELETED.
+
+ PARAMETER _TMP3     DELETED.
+
+ PARAMETER _TMP4     DELETED.
+
+ PARAMETER _TMP5     DELETED.
+
+ PARAMETER _TMP6     DELETED.
+
+ PARAMETER _TOTENG   DELETED.
+
+ PARAMETER _TOTELE   DELETED.
+
+ PARAMETER _Z1       DELETED.
+
+ PARAMETER _Z2       DELETED.
+
+ PARAMETER _Z3       DELETED.
+
+ PARAMETER _Z4       DELETED.
+
+ PARAMETER _Z5       DELETED.
+
+ PARAMETER _B2Q      DELETED.
+
+ PARAMETER _B3Q      DELETED.
+
+ PARAMETER _ELMC     DELETED.
+
+ PARAMETER _I        DELETED.
+
+ PARAMETER _IEXTRA   DELETED.
+
+ PARAMETER _ISOTRP   DELETED.
+
+ PARAMETER _TMP3_1   DELETED.
+
+ PARAMETER _TMP3_2   DELETED.
+
+ PARAMETER _TMP3_3   DELETED.
+
+ PARAMETER _TMP3_4   DELETED.
+
+ PARAMETER _TNONENG  DELETED.
+
+ PARAMETER _ARG1     DELETED.
+
+ PARAMETER _H3QMX    DELETED.
+
+ PARAMETER _BXYZ     DELETED.
+
+ PARAMETER _ELEMC    DELETED.
+
+ PARAMETER _IPZZ     DELETED.
+
+ PARAMETER _INFELI   DELETED.
+
+ PARAMETER _SUMINF   DELETED.
+
+ PARAMETER _ENGINF   DELETED.
+
+ PARAMETER _IPZA     DELETED.
+
+ PARAMETER _IPZB     DELETED.
+
+ PARAMETER _BLAST    DELETED.
+
+ PARAMETER _B_LAST   DELETED.
+
+ PARAMETER _IEXBH    DELETED.
+
+ PARAMETER _MX_B     DELETED.
+
+ PARAMETER _MX_H     DELETED.
+
+ PARAMETER _CGSFAC   DELETED.
+
+ PARAMETER _IINVAL   DELETED.
+
+ PARAMETER _B_RES    DELETED.
+
+ PARAMETER _CNELM    DELETED.
+
+ PARAMETER _DBBX     DELETED.
+
+ PARAMETER _DBHX     DELETED.
+
+ PARAMETER _EZ1      DELETED.
+
+ PARAMETER _EZ5      DELETED.
+
+ PARAMETER _FV       DELETED.
+
+ PARAMETER _MN_BX    DELETED.
+
+ PARAMETER _MN_BX1   DELETED.
+
+ PARAMETER _MN_HX    DELETED.
+
+ PARAMETER _MX_BX1   DELETED.
+
+ PARAMETER _MX_BX1   DELETED.
+
+ PARAMETER _MX_HX    DELETED.
+
+ PARAMETER _MX_HX1   DELETED.
+
+ PARAMETER _T_MAG_S  DELETED.
+
+ PARAMETER _MN_HX1   DELETED.
+
+ PARAMETER _BHET     DELETED.
+
+ PARAMETER _H_B      DELETED.
+
+ PARAMETER _H_LAST   DELETED.
+
+ PARAMETER _T_MAGB   DELETED.
+
+ PARAMETER _INUMBH   DELETED.
+
+ PARAMETER _HLAST    DELETED.
+
+ PARAMETER _BRES     DELETED.
+
+ PARAMETER _ABS1     DELETED.
+
+ PARAMETER _IISM1    DELETED.
+
+ PARAMETER _M_MAG1   DELETED.
+
+ PARAMETER _M_MAG2   DELETED.
+
+ PARAMETER _M_MAG3   DELETED.
+
+ PARAMETER _M_MAG4   DELETED.
+
+ PARAMETER _EMATS    DELETED.
+
+ PARAMETER _MN_BXT   DELETED.
+
+ PARAMETER _OK3      DELETED.
+
+ DELETE COMPONENT _CURELI                         
+
+ DELETE COMPONENT _CUREL0                         
+
+ DELETE COMPONENT _CUREL1                         
+
+ DELETE COMPONENT _CURINF                         
+
+ DELETE COMPONENT _INVALID                        
+
+ *ENDIF
+
+ *IF  _sysm                             ( =   6.00000     )  LT  
+      11                                ( =   11.0000     )  THEN    
+ DELETE COORD. SYS. FROM     17 TO     17 BY      1
+
+ PARAMETER _SYSM     DELETED.
+
+ *ENDIF
+
+ RSYS KEY SET TO   0
+
+ USE THE GLOBAL COORDINATE SYSTEM FOR SOLUTION RESULTS
+
+ ACTIVE COORDINATE SYSTEM SET TO         0  (CARTESIAN)  
+
+ PARAMETER _SYSR     DELETED.
+
+ PARAMETER _SYSC     DELETED.
+
+ NO ABSOLUTE VALUE ON ETABLE OPERATIONS
+
+
+ NUMBER OF DISPLAYED ERRORS ALLOWED PER COMMAND=                  5
+ NUMBER OF ERRORS ALLOWED PER COMMAND BEFORE ANSYS ABORT=     10000
+ ALL ERRORS WRITTEN TO D:\ansys_UDF_dist_v2\02_CERN_benchmarking_v11_clean\Test_6B\user102_CC\udf_dipole.err                                                                                                                                                                               
+ DO NOT TERMINATE /INPUT UPON FIRST ERROR
+
+ PROMPT TO INTERRUPT FILE BASED INPUTS (/INPUT AND MACROS) ON THE FIRST ERROR OR AFTER 5 WARNINGS
+
+ ABBREVIATION= _Z_WR     DELETED.
+
+ *GET  _CPU2     FROM  ACTI  ITEM=TIME CPU   VALUE=  3.58802295    
+
+ PARAMETER _DCPU =    0.1560010910    
+
+ PARAMETER _CPU1     DELETED.
+
+ PARAMETER _CPU2     DELETED.
+
+ PARAMETER _DCPU     DELETED.
+
+ MESSAGE POPUP LEVEL =    0
+
+ DELETE COMPONENT _MIKLEL                         
+
+ PARAMETER NLENE     DELETED.
+
+ PARAMETER NLCENE    DELETED.
+
+ PARAMETER _OLDSENE  DELETED.
+
+ PARAMETER _MURX     DELETED.
+
+ PARAMETER _MURY     DELETED.
+
+ PARAMETER _MURZ     DELETED.
+
+ PARAMETER _MGXX     DELETED.
+
+ PARAMETER _MGYY     DELETED.
+
+ PARAMETER _MGZZ     DELETED.
+
+ PARAMETER _MGSUM    DELETED.
+
+ PARAMETER _MIKLMAT  DELETED.
+
+ PARAMETER _BHTYPE   DELETED.
+
+ SELECT      COMPONENT _INNODE                         
+
+ SELECT      COMPONENT _INELEM                         
+
+ DELETE COMPONENT _INELEM                         
+
+ DELETE COMPONENT _INNODE                         
+
+ *IF  _mg2                              ( =  0.788861E-30 )  EQ  
+      0                                 ( =   0.00000     )  THEN    

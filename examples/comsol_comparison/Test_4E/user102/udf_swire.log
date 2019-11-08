@@ -1,0 +1,45 @@
+/BATCH  
+/COM,ANSYS RELEASE Release 17.1      BUILD 17.1      UP20160404       13:58:11
+/input,menust,tmp,''
+/GRA,POWER
+/GST,ON
+/PLO,INFO,3
+/GRO,CURL,ON
+/CPLANE,1   
+/REPLOT,RESIZE  
+WPSTYLE,,,,,,,,0
+/REPLOT,RESIZE  
+/INPUT,'001_dipole_u102_test4E_MFS','txt','D:\ansys_UDF_dist_v2\02_CERN_benchmarking_v11_clean\Test_4E\user102\',, 0
+/REPLOT,RESIZE  
+/REPLOT,RESIZE  
+finish  
+/post1  
+cmsel,s,cond
+alls,below,area 
+plnsol,b,sum
+plesol,nmisc,30 
+presol,nmisc,30 
+set,200 
+file,field1,rst 
+set,100 
+/replot 
+plesol,nmisc,9  
+plesol,nmisc,18 
+plesol,nmisc,23 
+plesol,nmisc,14 
+presol,nmisc,14 
+presol,nmisc,1  
+plesol,nmisc,1  
+presol,nmisc,11 
+/REPLOT,RESIZE  
+/REPLOT,RESIZE  
+FINISH  
+/CLEAR,START
+/COM,ANSYS RELEASE Release 17.1      BUILD 17.1      UP20160404       15:46:23
+/input,start,ans,'C:\Program Files\ANSYS Inc\v171\ANSYS\apdl\'  
+!*  
+/INPUT,'001_dipole_u102_test4E_MFS','txt','D:\ANSYS_UDF_DIST_V2\02_CERN_BENCHMARKING_V11_CLEAN\TEST_4E\USER102\',, 0
+/REPLOT,RESIZE  
+/REPLOT,RESIZE  
+FINISH  
+! /EXIT,NOSAV   

@@ -1,0 +1,128 @@
+rem ----------------------------------------------------------------------------------------------
+rem  set paths
+rem ----------------------------------------------------------------------------------------------
+
+rem benchmarking directory
+SET MY_PATH=D:\ansys_UDF_dist_v2\02_CERN_benchmarking_v11_clean
+
+rem compiled custom ANSYS.exe directory
+rem SET MY_PATH2=D:\ansys_UDF_dist_v2\03_uel\uel_v6
+SET MY_PATH2=D:\ansys_UDF_dist_v2\03_uel\uel_v8
+
+cd /d "%MY_PATH%"
+
+
+rem ----------------------------------------------------------------------------------------------
+rem  Test5A
+rem ----------------------------------------------------------------------------------------------
+
+cd Test_5A
+del *.csv
+del *.jpg
+cd user102
+del udf_dipole.*
+del Mag_v_t.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_5A\user102" -j "udf_dipole" -b -i 001_dipole_u102_test5A.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+
+cd Test_5A
+del *.csv
+del *.jpg
+cd user102_CC
+del udf_dipole.*
+del circu_res.txt
+del Mag_v_t.txt
+del power1.txt
+del voltage1.txt
+del current1.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_5A\user102_CC" -j "udf_dipole" -b -i 001_dipole_u102_test5A_CC.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+
+
+
+rem ----------------------------------------------------------------------------------------------
+rem  Test5B
+rem ----------------------------------------------------------------------------------------------
+
+cd Test_5B
+del *.csv
+del *.jpg
+cd user102
+del udf_dipole.*
+del Mag_v_t.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_5B\user102" -j "udf_dipole" -b -i 001_dipole_u102_test5B.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+
+
+rem ----------------------------------------------------------------------------------------------
+rem  Test5c
+rem ----------------------------------------------------------------------------------------------
+
+cd Test_5C
+del *.csv
+del *.jpg
+cd user102
+del udf_dipole.*
+del Mag_v_t.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_5C\user102" -j "udf_dipole" -b -i 001_dipole_u102_test5C.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+
+rem ----------------------------------------------------------------------------------------------
+rem  Test5d
+rem ----------------------------------------------------------------------------------------------
+
+rem -> don't forget that to get peak team using plnsol and *get you have to use /post interactive (not batch)
+
+cd Test_5D
+del *.csv
+del *.jpg
+cd user102
+del udf_dipole.*
+del Mag_v_t.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_5D\user102" -j "udf_dipole" -b -i 001_dipole_u102_test5D.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+
+rem ----------------------------------------------------------------------------------------------
+rem  Test6A
+rem ----------------------------------------------------------------------------------------------
+
+cd Test_6A
+del *.csv
+del *.jpg
+cd user102_CC
+del udf_dipole.*
+del Mag_v_t.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_6A\user102_CC" -j "udf_dipole" -b -i 001_dipole_u102_6A.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+
+
+rem ----------------------------------------------------------------------------------------------
+rem  Test6B
+rem ----------------------------------------------------------------------------------------------
+
+rem -> don't forget that to get peak team using plnsol and *get you have to use /post interactive (not batch)
+
+
+cd Test_6B
+del *.csv
+del *.jpg
+cd user102_CC
+del udf_dipole.*
+del Mag_v_t.txt
+del log.txt
+"C:\Program Files\ANSYS Inc\v171\ansys\bin\winx64\MAPDL.exe"  -g -p aa_r -np 1 -dir "%MY_PATH%\Test_6B\user102_CC" -j "udf_dipole" -b -i 001_dipole_u102_6B.txt -s read -l en-us -t -d win32 -o log.txt -custom "%MY_PATH2%\ANSYS.exe" 
+cd .. 
+cd ..
+

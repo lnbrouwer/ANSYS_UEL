@@ -1,0 +1,43 @@
+!do user102 by hand -> iso,linear
+cmsel,s,cond1
+alls,below,area
+etable,Bs,B,sum
+etable,Ptot,jheat
+etable,Mx,nmisc,21
+etable,My,nmisc,22
+etable,Ptau,nmisc,12
+!etable,rho,nmisc,18
+etable,rho,nmisc,24     !now use cern homoginized rho
+etable,area102,volu
+smult,MMx,Mx,area102,1,1
+smult,MMy,My,area102,1,1
+smult,BBs,Bs,area102,1,1
+smult,PPtau,Ptau,area102,1,1
+smult,PPtot,Ptot,area102,1,1
+smult,rrho,rho,area102,1,1
+ssum
+*get,MMxsum,ssum,0,item,MMx
+*get,MMysum,ssum,0,item,MMy
+*get,BBssum,ssum,0,item,BBs
+*get,PPtausum,ssum,0,item,PPtau
+*get,PPtotsum,ssum,0,item,PPtot
+*get,rrhosum,ssum,0,item,rrho
+*get,areasum,ssum,0,item,area102
+*set,Mxave,MMxsum/areasum
+*set,Myave,MMysum/areasum
+*set,Bsave,BBssum/areasum
+*set,rhoave,rrhosum/areasum
+
+!do user102 by hand -> iso,linear
+cmsel,s,cond
+alls,below,area
+etable,PtauALL,nmisc,12
+smult,PPtauALL,PtauALL,area102,1,1
+ssum
+*get,PPtausumALL,ssum,0,item,PPtauALL
+
+etable,PALL,jheat
+smult,PPALL,PALL,area102,1,1
+ssum
+*get,PPsumALL,ssum,0,item,PPALL
+

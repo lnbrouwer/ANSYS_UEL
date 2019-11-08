@@ -1,0 +1,115 @@
+all but cond
+
+                SUMMARY OF STORED ENERGY CALCULATION  
+ Load Step Number:       1.
+ Substep Number:         1.
+ Time:             0.1667E-02
+   Material Number of  Stored Energy        Material Description  
+    Number  Elements       (J/m) 
+        4.    4454.    0.69973E+03    Nonlin.   Isotrp.      .         .   
+       10.   11409.    0.21949E+05    Linear    Isotrp.                    
+ _____________________________________________________________________   
+   T O T A L 15863.      0.22649E+05
+ Note:                                                                   
+ The energy density for the active elements used in the energy  
+ calculation is stored in the element item "MG_ENG" for display  
+ and printing. The total stored energy is saved as parameter (S_ENG)  
+ _____________________________________________________________________   
+
+ 
+                    SUMMARY OF COENERGY CALCULATION  
+ Load Step Number:       1.
+ Substep Number:         1.
+ Time:             0.1667E-02
+   Material Number of     Coenergy          Material Description  
+    Number  Elements       (J/m) 
+        4.    4454.    0.41798E+04    Nonlin.   Isotrp.      .         .   
+       10.   11409.    0.21949E+05    Linear    Isotrp.                    
+ _____________________________________________________________________   
+   T O T A L 15863.      0.26129E+05
+ Note:                                                                   
+ The co-energy density for the active elements used in the co-energy  
+ calculation is stored in the element item "MG_COENG" for display  
+ and printing. The total coenergy is saved as parameter (C_ENG)  
+ _____________________________________________________________________ 
+ 
+ !sum uel by hand
+ 
+ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! find the total stored energy
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+cmsel,s,cond
+alls,below,area
+etable,Eall,SENE
+!etable,Aall,volu
+!smult,Ese,Eall,Aall,1,1
+ssum
+!*get,EngA,ssum,0,item,Ese
+*get,EngA,ssum,0,item,Eall
+
+Eng_uel = 3894.05
+
+eng_tot = 3894.05 + 0.22649E+05
+
+ 
+ 
+ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! find the total stored energy
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+alls
+cmsel,u,cond
+alls,below,area
+etable,Eall,SENE
+!etable,Aall,volu
+!smult,Ese,Eall,Aall,1,1
+ssum
+!*get,EngA,ssum,0,item,Ese
+*get,EngA,ssum,0,item,Eall
+
+Eng non_uel = 32439.1, which does not match the senergy command of 22649
+
+
+!check if sene sum agrees where no magnteic material
+alls
+cmsel,u,yoke
+cmsel,u,cond
+alls,below,area
+
+alls,below,area
+etable,Eall,SENE
+ssum
+*get,EngA,ssum,0,item,Eall
+! = 21949.0
+
+senergy,0
+! = 0.21949E+05        ! sene and macro agree when no magnetic material!
+
+
+!now check for yoke
+
+! 0.69973E+03  senergy macro
+! 10490.1      etable by hand
+
+
+=>  NEED TO USE SENERGY MACRO FOR YOKE!
+
+i.e. 
+
+cmsel,s,yoke
+alls,below,area
+senergy,0
+
+eyoke = S_ENG
+
+
+alls
+cmsel,u,yoke
+alls,below,area
+etable,Eall,SENE
+ssum
+*get,EngA,ssum,0,item,Eall
+eother = EngA
+
+etot = eyoke+eother
+
+

@@ -1,0 +1,20 @@
+
+!try to do with 
+
+cmsel,s,cond
+alls,below,area
+esel,r,ename,,102
+etable,Az102,a,z
+etable,area102,volu
+
+smult,flux102,Az102,area102,1,1
+
+ssum
+*get,Az102sum,ssum,0,item,Az102
+*get,area102sum,ssum,0,item,area102
+*get,flux102sum,ssum,0,item,flux102
+
+
+flux102sum = flux102sum*nturns*curdir/across
+!*set,Lflux,flux102sum/I0
+

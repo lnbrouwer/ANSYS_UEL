@@ -1,0 +1,18 @@
+/BATCH  
+/COM,ANSYS RELEASE Release 17.1      BUILD 17.1      UP20160404       18:49:06
+/BATCH  
+/COM,ANSYS RELEASE Release 17.1      BUILD 17.1      UP20160404       09:03:40
+/input,menust,tmp,''
+/GRA,POWER
+/GST,ON
+/PLO,INFO,3
+/GRO,CURL,ON
+/CPLANE,1   
+/REPLOT,RESIZE  
+WPSTYLE,,,,,,,,0
+/REPLOT,RESIZE  
+RESUME  
+/COM,ANSYS RELEASE Release 17.1      BUILD 17.1      UP20160404       09:03:54
+/INPUT,'finish','txt','D:\ansys_UDF_dist_v2\02_CERN_benchmarking_v11_clean\Test_5D\user102\',, 0
+FINISH  
+! /EXIT,NOSAV   

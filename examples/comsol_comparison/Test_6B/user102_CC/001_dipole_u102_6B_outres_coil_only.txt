@@ -1,0 +1,975 @@
+!*******************************************************
+!********** CERN Benchmarking **************************
+!*******************************************************
+
+/title, udf_dipole
+/prep7
+
+!********** Options *******************************
+!*afun,rad
+pi=acos(-1)
+*afun,deg
+/UIS,MSGPOP,4  !suppress warnings
+/NERR,,99999999,     ! changes # of error and warnings to prevent crashing for large # of warnings
+!**************************************************
+
+/title, udf_dipole
+
+
+!**************************************************
+!****** Material Properties (SI - magnetic) *******
+!**************************************************
+
+!Coil
+mp,murx,1,1   !rel. perm.
+!Air
+mp,murx,10,1   !rel. perm.
+
+!Iron (4)  bh table from cern
+tb,bh,4,, 44
+TBPT,,0.000000,0.000000 
+TBPT,,7.941832,0.007120 
+TBPT,,15.883663,0.016700 
+TBPT,,23.825495,0.029250 
+TBPT,,31.767326,0.045220 
+TBPT,,47.531623,0.088910 
+TBPT,,63.367539,0.154340 
+TBPT,,79.219371,0.240660 
+TBPT,,158.812757,0.765070 
+TBPT,,317.649387,1.296830 
+TBPT,,475.180947,1.452170 
+TBPT,,633.627647,1.520430 
+TBPT,,792.106179,1.558410 
+TBPT,,1192.094374,1.609540 
+TBPT,,1589.758907,1.638920 
+TBPT,,1987.081257,1.660550 
+TBPT,,2386.281635,1.678260 
+TBPT,,2782.290957,1.694270 
+TBPT,,3179.493941,1.708280 
+TBPT,,3577.039107,1.721750 
+TBPT,,3971.377302,1.734140 
+TBPT,,4765.210312,1.757060 
+TBPT,,5559.099026,1.778050 
+TBPT,,6354.069994,1.797640 
+TBPT,,7149.486595,1.815670 
+TBPT,,7944.083548,1.833300 
+TBPT,,10590.000000,1.850000 
+TBPT,,13160.000000,1.900000 
+TBPT,,21170.000000,2.000000 
+TBPT,,33760.000000,2.100000 
+TBPT,,66000.000000,2.200000 
+TBPT,,120960.000000,2.280000 
+TBPT,,169600.000000,2.344300 
+TBPT,,212170.000000,2.399600 
+TBPT,,283130.000000,2.490500 
+TBPT,,339890.000000,2.562700 
+TBPT,,425040.000000,2.670600 
+TBPT,,566950.000000,2.849800 
+TBPT,,850760.000000,3.207400 
+TBPT,,1702300.000000,4.278200 
+TBPT,,2128000.000000,4.813400 
+TBPT,,2837700.000000,5.705200 
+TBPT,,3405100.000000,6.418600 
+TBPT,,4256700.000000,7.488700
+TBPLOT,bh,4,
+
+
+!**********EM Elements*******************************
+et,1,plane53        !2d EM: Az
+keyopt,1,1,0    
+!et,2,user102   !2d EM: Az,cur,emf (stranded circu)   
+!**************************************************
+
+et,2,user102   !2d EM: Az,cur,emf (stranded circu)   
+keyopt,2,1,2   ! circuit coupled
+keyopt,2,2,1   ! transfer to thermal with binary
+keyopt,2,3,1   ! LBNL Jc fit -> THIS IS NOT YET SET UP -> HARD CODE SCU FIT, key(3) does nothing
+               ! no keyopt 4
+keyopt,2,5,1   ! NIST fit for rhocu
+               ! no keyopt 6
+keyopt,2,7,4   ! c.s. + quench on
+keyopt,2,8,0   ! turn on IFCC
+
+
+!/input,02_dipole_geo_twoairbc_dense,txt,
+/input,02_dipole_geo_twoairbc_loop,txt,
+
+
+
+! Inner Layer 
+cmsel,s,coil1
+alls,below,area
+emodif,all,type,2
+emodif,all,real,2
+asum
+*get,across1,area,all,area
+*get,nt1,area,num,count
+
+
+! Outer Layer 
+cmsel,s,coil2
+alls,below,area
+emodif,all,type,2
+emodif,all,real,22
+asum
+*get,across2,area,all,area
+*get,nt2,area,num,count
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! real constants
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! scaling to match inductance and resistance -> pick not the same
+Lc = 10.11   
+Li = 9.20  
+  
+
+!set real constants
+nstrand = 40
+ds = 0.75e-3
+fcond = nstrand*ds*ds*pi/(4*aw*bw)
+fsc=0.4
+Lp = 14e-3
+feff = 1.0
+RRR = 200
+TauMult = 0.0
+scIFCU = 1.0 
+curdir = 1.0
+Ctau = 1e-3     !if constant tau is chosen using keyopt
+
+! Nb3Sn fit parameters (from Edvard)
+Tc0 = 16.0
+Bc0 = 28.11
+Jc0 = 174000/Bc0
+afit=0.96
+pfit = 1.52
+
+
+! real const for inner coil 
+nturns = nt1		
+across = across1
+R,2,across,nturns,fcond,fsc,curdir,Lc   !set real constants
+Rmore,Li,RRR,Lp,feff,Ctau,TauMult
+Rmore,Jc0,Tc0,Bc0,afit,pfit,scIFCU
+
+
+! real const for outer coil 
+nturns = nt2		
+across = across2
+R,22,across,nturns,fcond,fsc,curdir,Lc   !set real constants
+Rmore,Li,RRR,Lp,feff,Ctau,TauMult
+Rmore,Jc0,Tc0,Bc0,afit,pfit,scIFCU
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Set Up Circuit
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+et,9,circu124
+keyopt,9,1,4        ! circuit element - independent voltage source
+keyopt,9,2,4        ! piecewise linear load
+
+et,5,circu124
+keyopt,5,1,5        ! circuit element - stranded conductor -> connected to FEA domain
+
+et,6,circu124
+keyopt,6,1,0        ! circuit element - external resistor
+
+et,7,circu124
+keyopt,7,1,2        ! circuit element - capacitor
+
+!et,3,circu124
+!keyopt,3,1,3        ! circuit element - independent current source
+!keyopt,3,2,4        ! piecewise linear load
+
+
+!********** Real Constants for CLIQ Circuit ****************************************
+
+*set,Rcap,15e-3        !Cliq resistor
+*set,Ccap,0.035        !Cliq capacitor
+*set,Vcap,350          !Cliq capacitor voltage
+
+
+
+
+SEcap = 0.5*Ccap*Vcap*Vcap
+tauCAP = Rcap*Ccap
+
+
+R,66,Rcap
+R,7,Ccap,-Vcap      ! NEGATIVE TO SET UP PLUS V CHARGING (CHECK NODE NUMBERING -> THIS IS DROP FROM LOWER TO HIGHER NODE)
+R,99,0,Vcap,5.01/1000,Vcap,5.02/1000,0,10,0         ! "CLIQ cap switch"
+
+
+! for cliq voltage dissapation
+Rdiss = 1.0e-3
+R,67,Rdiss
+
+
+!********** Real Constants for Circuit ************************************************************************
+rdump = 30e-3
+cur1 = 13.8e3
+
+
+SymFac = 4  ! left/right,top/bot
+
+
+R,5,1.0     !symfactor is 1 (no symmetry)
+R,5,SymFac   
+R,6,rdump
+*set,Rtot,rdump
+R,9,0,cur1*RTot,5.0/1000,cur1*RTot,5.01/1000,0,1000/1000,0    ! "dump res switch" 
+
+
+
+!**************************************************
+!********** Create Circuit  ***********************
+!**************************************************
+csys,0
+
+xcirc = 0.0
+ycirc = -70e-3
+dyy = 30e-3
+dx = 20e-3
+
+
+!make circuit nodes (location is arbitrary, connectivity is important)
+alls
+numcmp,node
+*get,nnode,node,,num,max
+numstr,node,nnode
+
+
+n,nnode+1,xcirc+dx*0,ycirc
+n,nnode+2,xcirc+dx*1,ycirc
+n,nnode+3,xcirc+dx*2,ycirc
+n,nnode+4,xcirc+dx*2,ycirc-dyy
+n,nnode+5,xcirc+dx*1,ycirc-dyy
+n,nnode+6,xcirc+dx*0,ycirc-dyy
+
+
+!nodes for CLIQ
+n,nnode+7,xcirc+dx*1,ycirc+dyy/2.0
+n,nnode+8,xcirc+dx*1.5,ycirc+dyy
+n,nnode+9,xcirc+dx*2,ycirc+dyy
+n,nnode+10,xcirc+dx*2,ycirc+dyy/2.0
+n,nnode+11,xcirc+dx*1.5,ycirc+dyy/2.0
+
+! add dissapation resistor for vcliq voltage 
+n,nnode+15,xcirc+dx*1.5,ycirc+dyy*1.5
+n,nnode+16,xcirc+dx*2,ycirc+dyy*1.5
+
+
+!nodes for CLIQ - rev
+!n,nnode+7,xcirc+dx*1,ycirc+dyy/2.0
+!n,nnode+8,xcirc+dx*1.0,ycirc+dyy
+!n,nnode+9,xcirc+dx*1.5,ycirc+dyy
+!n,nnode+10,xcirc+dx*2,ycirc+dyy/2.0
+!n,nnode+11,xcirc+dx*1.5,ycirc+dyy/2.0
+
+!nodes for volt supp
+n,nnode+12,0,0
+n,nnode+13,0,0
+
+nsel,s,node,,nnode+1,nnode+13
+cm,gn,node
+
+
+
+cmsel,s,coil2
+alls,below,area
+*get,nc1,node,0,nxth
+cp,next,emf,all
+cp,next,curr,all
+type,5    
+real,5
+alls
+E,nnode+1,nnode+2,nc1
+	
+cmsel,s,coil1
+alls,below,area
+*get,nc1,node,0,nxth
+cp,next,emf,all
+cp,next,curr,all
+type,5    
+real,5
+alls
+E,nnode+2,nnode+3,nc1
+
+	
+type,9    !independent voltage source
+real,9
+E,nnode+5,nnode+4,nnode+12
+
+
+
+type,6    ! dump resistor
+real,6
+E,nnode+5,nnode+6
+
+
+!cp to connect "wires"
+alls
+!cp,next,volt,nnode+3,nnode+4    !move to later so it can be changed  
+cp,100007,volt,nnode+1,nnode+6     
+
+
+
+!*********************************************************
+!********** Create Circuit (CLIQ)  ***************
+!*********************************************************
+
+type,6    !resistor CLIQ
+real,66
+E,nnode+11,nnode+7
+
+type,7    !capacitor CLIQ
+real,7
+E,nnode+10,nnode+11
+
+
+type,9    !independent voltage source (CLIQ)
+real,99
+E,nnode+8,nnode+9,nnode+13
+
+
+type,6    !resistor to dissapate eng after cliq switch
+real,67
+E,nnode+15,nnode+16
+
+
+
+!need to name this to delete it during solu
+!cp,next,volt,nnode+7,nnode+8,nnode+11
+cp,100005,volt,nnode+7,nnode+8   !now allow to charge
+
+!now add diss to ground
+!cp,next,volt,nnode+3,nnode+4,nnode+10,nnode+9
+!cp,100006,volt,nnode+3,nnode+4,nnode+10,nnode+9,nnode+16
+
+nsel,s,node,,nnode+1,nnode+16
+cm,gn,node
+esln,s,0
+cm,ge,elem
+
+cmsel,s,ge
+alls,below,elem
+/graphics,full
+eplot
+
+
+
+
+!******************************************
+!********** B.C ***************************
+!******************************************
+
+!cp az across coil boundaries
+alls
+alls,below,area
+cpintf,az,1e-7
+
+
+! Set boundary conditions of the voltage
+alls
+!d,nnode+2,volt,0
+d,nnode+3,volt,0
+d,nnode+10,volt,0
+d,nnode+9,volt,0
+d,nnode+16,volt,0
+d,nnode+4,volt,0
+
+! Set boundary conditions of the magnetic vector potential
+alls
+csys,0
+lsel,r,loc,x,0
+nsll,s,1
+d,all,az,0
+
+alls
+csys,1
+lsel,r,loc,x,rbc
+nsll,s,1
+d,all,az,0
+
+
+!!!!! TURN OFF IRON YOKE
+!cmsel,s,yoke
+!alls,below,area
+!emodif,all,mat,1
+
+
+
+
+!**************************************************
+!****** Thermal Model *******
+!**************************************************
+
+! thermal for non-cond region
+! et,4,plane77
+
+!COIL PROPERTIES (mat11)  -> fake to avoid error of undefined
+mptemp,1,1.9      
+mp,dens,11,99999    
+mp,kxx,11,99999        
+mp,c,11,99999  
+
+
+
+! thermal for conductor region only
+et,12,user101
+keyopt,12,1,0         ! 0=internal fits, 1=ANSYS table
+keyopt,12,2,1         ! 0=no transfer to mag, 1=transfer to mag
+keyopt,12,3,1         ! 0=NbTi, 1=Nb3Sn, 2 = Bi2212
+keyopt,12,4,0         ! 0=Cu, 1=Ag
+keyopt,12,5,0         ! 0=G10
+keyopt,12,6,1         ! 0=NIST Cucv, 1=CUDI, 2=MATPRO 
+keyopt,12,7,0         ! 0=NIST Cukxx, 1=CUDI, 2=MATPRO 
+keyopt,12,8,0         ! TBD (NbTi Cv)
+keyopt,12,9,0         ! 0=NIST, 1=CUDI,  (Nb3Sn Cv)
+keyopt,12,10,0         ! TBD  (Bi2212 Cv)
+keyopt,12,11,0         ! 0=NIST  (G10 Cv)
+keyopt,12,12,0         ! Agcv
+keyopt,12,13,0         ! Agkxx
+
+
+
+!***********************************************************************
+!****** strand Element Mapping from Magnetic to Thermal  *******
+!***********************************************************************
+
+
+!match elements with a constant shift instead (no loop - much faster)
+alls
+numcmp,elem
+
+
+
+cmsel,s,cond
+alls,below,area
+*get,nna,area,,count
+*do,j,1,nna
+ *get,na%j%,area,0,nxth
+ asel,u,area,,na%j%
+*enddo
+
+! starting number for the real constants -> make sure no overlap with circu
+
+cnt = 500    !this needs to be greater than all other reals (make sure to check nbti outer)
+*do,j,1,nna
+    asel,s,area,,na%j%
+    alls,below,area
+    *get,enum,elem,,count
+    *get,eMi,elem,,num,min
+
+    agen,2,all,,,,,,,0
+    asel,u,area,,na%j%
+    cm,tcond%j%,area
+
+    cmsel,s,tcond%j%
+    alls,below,area
+    *get,eTi,elem,,num,min
+
+
+    *do,i,1,enum
+        r,cnt,eMi+(i-1)       
+        ettt = eTi+(i-1)
+        esel,s,elem,,ettt
+        emodif,all,real,cnt   
+        cnt = cnt + 1   
+    *enddo
+   
+*enddo
+
+
+
+cmsel,s,tcond1
+*do,j,2,nna
+    cmsel,a,tcond%j%
+*enddo
+alls,below,area
+cm,tcond,area
+cm,treg,area
+
+
+
+
+!rename tcond1
+!cmsel,s,tcond
+!alls,below,area
+!csys,0
+!ksel,r,loc,x,x0-.1e-3,x0+aw+dx+.1e-3
+!lslk,s,1
+!asll,s,1
+!cm,tcond1,area
+
+
+!**************************************************
+!****** Define EMAG/THERMAL Interfaces  ***********
+!**************************************************
+
+cmsel,s,cond
+cmsel,a,tcond
+alls,below,area
+bfe,all,fvin,,1     !define interfaces on both elements
+
+
+
+
+cmsel,s,tcond
+alls,below,area
+emodif,all,mat,11
+emodif,all,type,12
+
+
+
+save,presolve,db
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! Begin Solution 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+finish
+alls
+/solu
+
+!mfclear,solu,1
+nropt,full
+
+!set initial condition for temp region
+cmsel,s,treg
+alls,below,area
+ic,all,temp,4.5
+
+
+!only output solution for cond and circuit elements for comparison
+cmsel,s,cond
+alls,below,area
+cmsel,a,gn
+cmsel,a,ge
+cm,esolu,elem
+cm,nsolu,node
+
+cmsel,s,tcond
+alls,below,area
+cm,esoluT,elem
+cm,nsoluT,node
+
+outres,all,none
+outres,esol,all,esolu
+outres,nsol,all,nsolu
+outres,esol,last,esoluT
+outres,nsol,last,nsoluT
+
+
+!MFS solver settings	 
+alls
+mfan,on ! Activate ANSYS Multi-field solver analysis
+mfel,1,1,2,5,6,7,9   ! Field #1 ET;s, Emag
+!
+mfel,2,12          ! Field #2 ET's, Thermal
+mfor,1,2             ! Field solution order
+
+
+! load transfer options
+mfvo,1,1,hgen,2 ! Transfer hgen from Emag to Thermal
+mfvo,1,2,temp,1 ! Transfer Temp from Thermal to Emag
+
+
+
+!EMAG analysis options (initial -> before decay)
+antype,trans
+nlgeom,on
+!outres,all,all
+tref,4.5
+pivcheck,off
+nsubst,1
+!cnvtol,curt,,,,1e-6   !won't converge unless this is set
+!cnvtol,vltg,,,,1e-6
+nsubst,1
+timi,off,mag
+mfcm,1,  ! Write Emag analysis options
+
+!Thermal analysis options
+antype,trans 
+nlgeom,on
+tref,4.5
+nsubst,1
+neqit,50
+!cnvtol,heat,,,,1e-5
+!outres,all,last    !only write out final converged temp for each stagger
+mfcm,2, ! Write Thermal analysis options
+
+
+! set it up for no staggering, just passing at a given interval
+mfiter,1       !maximum number of stagger iterations, if 1 should set relaxation factor (mfrelax) to 1 (default is 10)
+mfrelax,all,1 
+!mfrelax,temp,1      !relaxation of transfered loads (default is 0.75)
+!mfrelax,hgen,1 
+!mfconv,1e-3    !convergence for load transfer (to exit stagger) (default is 1% = 0.01)
+
+
+
+!solve LR decay
+/title,Test6B
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! Begin Solution Loop
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+!solve with no timi up to point at which voltage decays (with no quench real 18=0)
+alls
+taumult = 0.0
+rmodif,2,12,taumult
+rmodif,22,12,taumult
+!nsubst,5
+mfti,5e-3        ! End time		
+mfdt,(5e-3)/5.0  ! dt	
+solve
+
+
+
+
+!turn on transient effects
+!re-do thermal sol commands
+timi,on,all
+!nsubst,10
+autos,on 
+deltim,1e-5,1e-5,1e-4,on 
+nropt,full
+!cnvtol,heat,1e-1
+!cnvtol,temp,1e-3
+neqit,50
+mfcm,2, ! Write Thermal analysis options
+			
+!re-do EMAG sol commands			
+timi,on,all
+autos,off
+nsubst,1
+mfcm,1, ! Write magnetic analysis options
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!			
+! Turn on Transient Effects, drop main ps
+!   -> up to 5.01ms
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!drop ps voltage and move out of circu
+cpdele,100007
+d,nnode+1,volt,0
+d,nnode+6,volt,0
+
+dt = 2e-6    !five time steps
+ti = 5.00e-3 + dt
+tf = 5.01e-3
+
+nstp = (tf-ti)/dt + 1.0
+aa = 2.0    !power for transistion
+
+*do,i,1,nstp
+	tt = ti+(i-1)*dt
+!	TauMult = ((tt-ti)/(tf-ti))**aa         !this could be implemented for turning off/on with change in quench state, where tf-ti is time const and tf and ti are saved var
+  TauMult = 1.0 
+  rmodif,2,12,TauMult
+  rmodif,22,12,TauMult
+	alls
+	mfti,tt    ! End time		
+	mfdt,dt   ! dt	
+	nsubst,1
+	solve
+*enddo
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!			
+! Fire CLIQ
+!   -> up to 5.02ms
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! connect CLIQ
+cpdele,100005
+ce,next,0, nnode+2,volt,-1, nnode+7,volt,1, 
+
+!diss cliq voltage
+cp,next,volt,nnode+8,nnode+15
+
+
+dt = 2e-6    !five time steps
+ti = 5.01e-3 + dt
+tf = 5.02e-3
+nstp = (tf-ti)/dt + 1.0
+
+	
+*do,i,1,nstp
+	tt = ti+(i-1)*dt
+	alls
+	mfti,tt    ! End time		
+	mfdt,dt   ! dt	
+	nsubst,1
+	solve
+*enddo
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!			
+! Continue
+!   -> up to 5.1ms
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+dt = 1e-5    ! 8 time steps
+ti = tf + dt
+tf = 5.1e-3
+nstp = (tf-ti)/dt + 1.0
+
+	
+*do,i,1,nstp
+	tt = ti+(i-1)*dt
+	alls
+	mfti,tt    ! End time		
+	mfdt,dt   ! dt	
+	nsubst,1
+	solve
+*enddo
+
+
+
+!re-do thermal sol commands
+!timi,on,all
+!autos,on 
+!deltim,1e-4,1e-4,0.5e-3,on 
+!nropt,full
+!neqit,50
+!mfcm,2, ! Write Thermal analysis options
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!			
+! Continue
+!   -> up to 20 ms
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+dt = 1e-4    ! 149 time steps
+ti = tf + dt
+tf = 20e-3
+nstp = (tf-ti)/dt + 1.0
+
+	
+*do,i,1,nstp
+	tt = ti+(i-1)*dt
+	alls
+	mfti,tt    ! End time		
+	mfdt,dt   ! dt	
+	nsubst,1
+	solve
+*enddo
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!			
+! Continue
+!   -> up to 100 ms
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+dt = 5e-4    ! 160 time steps
+ti = tf + dt
+tf = 100e-3
+nstp = (tf-ti)/dt + 1.0
+
+	
+*do,i,1,nstp
+	tt = ti+(i-1)*dt
+	alls
+	mfti,tt    ! End time		
+	mfdt,dt   ! dt	
+	nsubst,1
+	solve
+*enddo
+
+
+!re-do thermal sol commands
+timi,on,all
+autos,on 
+deltim,1e-4,1e-4,0.5e-3,on 
+nropt,full
+neqit,50
+mfcm,2, ! Write Thermal analysis options
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!			
+! Continue
+!   -> up to 500 ms
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+dt = 1e-3    ! 400 time steps
+ti = tf + dt
+tf = 500e-3
+nstp = (tf-ti)/dt + 1.0
+
+	
+*do,i,1,nstp
+	tt = ti+(i-1)*dt
+	alls
+	mfti,tt    ! End time		
+	mfdt,dt   ! dt	
+	nsubst,1
+	solve
+*enddo
+
+
+
+
+!does not writing restart files (emat esav etc. speed up?)
+! RESCONTROL, Action, Ldstep, Frequency, MAXFILES
+!rescontrol,define,none,none
+
+save
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Time-Hist Post-Process
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+finish
+/post26
+lines,10000    !avoid repeating headers < 1000 lines
+numvar,100    !set number of variables great than the default of 10
+In = 10     !start esol numbering at 10
+/input,07_ansys_coil_post26_circu_v2,txt
+
+
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Post1 Loop
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+finish
+/post1
+file,field1,rst
+cmsel,s,cond
+set,last,
+*get,nset,active,0,set,NSET
+plnsol,b,y
+plnsol,b,sum
+csys,0
+
+
+
+/output,
+
+!find the yoke energy for the first and last step
+!/uis,msgpop,4     !only error msg
+!set,first
+!cmsel,s,yoke
+!alls,below,area
+!senergy,0
+!eyokeI = S_ENG
+!set,last
+!cmsel,s,yoke
+!alls,below,area
+!senergy,0
+!eyokeF = S_ENG
+
+
+
+
+
+/DELETE,Mag_v_t,txt
+*cfopen,Mag_v_t,txt
+
+set,first
+*do,i,1,nset
+  /input,002_sum_nmisc_M_HT0,txt
+!	EngA = eother + eyoke%i%
+	EngA = eother 
+  *get,tm,active,0,set,time
+	*vwrite,tm,flux102sum,EngA,eyokeI,eyokeF,tauave,Mxave,Myave,PPtausum,PPtausumALL,PPressum,PPressumALL,Rcoil,IFCUave
+(14(ES16.7))
+	set,next
+*enddo
+
+*cfclose
+
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Post1 Loop Thermal
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+finish
+/post1
+file,field2,rth
+cmsel,s,tcond
+set,last,
+*get,nset,active,0,set,NSET
+plnsol,b,y
+plnsol,b,sum
+csys,0
+
+/DELETE,Therm_v_t,txt
+*cfopen,Therm_v_t,txt
+
+set,first
+*do,i,1,nset
+  /input,002_sum_101_therm,txt
+  *get,tm,active,0,set,time
+	*vwrite,tm,Tsave,Bsave,CvCuave,CvNb3Snave,CvG10ave,Cvmixave
+(10(ES16.7))
+	set,next
+*enddo
+
+*cfclose
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Post1 Loop Thermal for Peak Temp
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+finish
+/post1
+file,field2,rth
+set,last,
+*get,nset,active,0,set,NSET
+csys,0
+
+/DELETE,Thot_v_t,txt
+*cfopen,Thot_v_t,txt
+
+set,first
+*do,i,1,nset
+  cmsel,s,tcond
+	alls,below,area
+	plnsol,temp,
+	*get,Thot%i%,plnsol,0,max
+!  /input,002_sum_101_therm,txt
+  *get,tm,active,0,set,time
+!	*vwrite,tm,Tsave,Bsave,CvCuave,CvNb3Snave,CvG10ave,Cvmixave,Thot%i%
+!(11(ES16.7))
+*vwrite,tm,Thot%i%,
+(2(ES16.7))
+	set,next
+*enddo
+
+*cfclose
+
+/eof
+
+
+
+/eof
+
+
+

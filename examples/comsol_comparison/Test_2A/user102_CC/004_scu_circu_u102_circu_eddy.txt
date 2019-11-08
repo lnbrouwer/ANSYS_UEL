@@ -1,0 +1,700 @@
+!*******************************************************
+!********** SCU: magnetic  *****************************
+!*******************************************************
+
+/title, scu_udf_multi_phys
+!/filname,scu_mag,1
+/prep7
+
+!********** Options *******************************
+!*afun,rad
+pi=acos(-1)
+*afun,deg
+!/UIS,MSGPOP,4  !suppress warnings
+/NERR,,99999999,     ! changes # of error and warnings to prevent crashing for large # of warnings
+!**************************************************
+
+/title, scu_udf_multi_phys
+
+!clear the transfer file
+/DELETE,NMISC_trans,txt
+!*cfopen,NMISC_trans,txt
+!*cfclose
+
+
+
+!clear the transfer file
+/DELETE,NMISC_trans_check,txt
+*cfopen,NMISC_trans_check,txt
+*cfclose
+
+
+!clear the log file
+/DELETE,loglog,txt
+*cfopen,loglog,txt
+*cfclose
+
+
+!**************************************************
+!****** Electromagnetic Model *******
+!**************************************************
+
+
+!**************************************************
+!****** Material Properties (SI - magnetic) *******
+!**************************************************
+!mpde,all,1
+!mpde,all,2
+!mpde,all,3
+!mpde,all,4
+!mpde,all,5
+!mpde,all,6
+!mpde,all,7
+!mpde,all,8
+!mpde,all,9
+!mpde,all,10
+!Coil
+rhoc = 1e-18
+mp,murx,1,1   !rel. perm.
+!mp,rsvx,1,rhoc        !set very small to be superconducting
+!Aluminum
+mp,murx,2,1   !rel. perm.
+!mp,rsvx,2,3.94e-8      ! electric resistivity of aluminum 6061T6 at 273K (handbook supercond machinery)
+mp,rsvx,2,1.40e-8      ! electric resistivity of aluminum 6061T6 at 4.2K (handbook supercond machinery)
+!Stainless steel
+mp,murx,3,1   !rel. perm.
+!Iron
+!mp,murx,4,1   !rel. perm.
+mp,rsvx,4,7.43e-9       !give iron fixed resistivity of armco
+!Titanium
+mp,murx,5,1   !rel. perm.
+!Aluminum bronze
+mp,murx,6,1   !rel. perm.
+mp,rsvx,6,15.8e-8      ! electric resistivity of aluminum bronze at 4.2K(handbook supercond machinery)
+!Epoxy - G10
+mp,murx,7,1   !rel. perm.
+! Un-powered strands (Corrector)
+mp,murx,8,1   !rel. perm.
+!Air
+mp,murx,10,1   !rel. perm.
+
+
+!Iron (4)
+!tb,bh,4,,19
+!! Old values, Iron BH-Curve from ANSYS Magnetics Manual
+!TBPT,,0,0
+!TBPT,,100,0.5
+!TBPT,,200,0.88
+!TBPT,,300,1.1
+!TBPT,,400,1.22
+!TBPT,,500,1.3
+!TBPT,,600,1.36
+!TBPT,,800,1.43
+!TBPT,,1000,1.47
+!TBPT,,1400,1.51
+!TBPT,,2000,1.55
+!TBPT,,4000,1.61
+!TBPT,,6000,1.66
+!TBPT,,8000,1.7
+!TBPT,,12000,1.76
+!TBPT,,16000,1.8
+!TBPT,,20000,1.84
+!TBPT,,30000,1.92
+!TBPT,,40000,1.97
+!TBPLOT,bh,4,
+
+
+
+
+!Iron (4)
+!tb,bh,4,,34
+tb,bh,4,,33
+!! From Opera3D tenten.bh
+TBPT,defi,0,0
+TBPT,,209.000,0.576
+TBPT,,250.000,0.680
+TBPT,,302.000,0.792
+TBPT,,363.000,0.895
+TBPT,,436.500,0.992
+TBPT,,524.800,1.082
+TBPT,,631.000,1.164
+TBPT,,758.600,1.237
+TBPT,,912.000,1.302
+TBPT,,1096.000,1.359
+TBPT,,1318.000,1.407
+TBPT,,1585.000,1.449
+TBPT,,2291.000,1.517
+TBPT,,2754.000,1.545
+TBPT,,3980.000,1.596
+TBPT,,5754.000,1.646
+TBPT,,8318.000,1.702
+TBPT,,12023.000,1.768
+TBPT,,14450.000,1.805
+TBPT,,17380.000,1.843
+TBPT,,20890.000,1.883
+TBPT,,25120.000,1.924
+TBPT,,30199.000,1.964
+TBPT,,36308.000,2.002
+TBPT,,43650.000,2.038
+TBPT,,52480.000,2.071
+TBPT,,63095.000,2.100
+TBPT,,75870.000,2.125
+TBPT,,91200.000,2.146
+TBPT,,109650.000,2.165
+TBPT,,131830.000,2.187
+TBPT,,158490.000,2.214
+TBPT,,190500.000,2.246
+
+
+!**********EM Elements*******************************
+et,1,plane53        !2d EM: Az
+keyopt,1,1,0    
+!et,2,plane53        !2d EM: circu coupled stranded
+!keyopt,2,1,3   
+
+et,2,user102   !2d EM: Az,cur,emf (stranded circu)   
+keyopt,2,1,2   ! circuit coupled
+keyopt,2,2,1   ! transfer to thermal with binary
+keyopt,2,3,1   ! LBNL Jc fit -> THIS IS NOT YET SET UP -> HARD CODE SCU FIT, key(3) does nothing
+               ! no keyopt 4
+keyopt,2,5,1   ! NIST fit for rhocu
+               ! no keyopt 6
+keyopt,2,7,2   ! force quench at all times (then turn on/off with realconst=18 scIFCU)
+keyopt,2,8,1   ! turn off IFCC
+
+
+
+et,3,plane53        !2d EM: Az,volt -> eddy region
+!keyopt,1,1,1    
+!keyopt,3,1,1  
+keyopt,3,1,0
+
+!**************************************************
+!R,1
+
+/input,02_geo_strand_sym_flip_nmsh_pat_v5,txt,
+
+/input,05_rename_pockets_by_loc,txt,
+
+cmsel,s,epox
+alls,below,area
+emodif,all,mat,7
+
+cmsel,s,turn
+alls,below,area
+emodif,all,mat,1
+
+cmsel,s,corrector1
+alls,below,area
+emodif,all,mat,8
+
+
+cmsel,s,yoke
+alls,below,area
+emodif,all,type,3
+emodif,all,mat,4
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Set Up Circuit
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+et,9,circu124
+keyopt,9,1,4        ! circuit element - independent voltage source
+keyopt,9,2,4        ! piecewise linear load
+
+et,5,circu124
+keyopt,5,1,5        ! circuit element - stranded conductor -> connected to FEA domain
+
+et,6,circu124
+keyopt,6,1,0        ! circuit element - external resistor
+
+!et,3,circu124
+!keyopt,3,1,3        ! circuit element - independent current source
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! shared real constants
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! scaling to match inductance per period of 3D opera model
+lmag = 0.1105     !matching of Ld at 800A
+lmag = 0.092      !match energy at full current
+
+
+fcond = 56*.3*.3*pi/(6.32*4.67)   !~54%
+fcond = 1
+fsc = 0.45
+Lp = 14e-3
+feff = 0.75
+RRR = 200
+TauMult = 0.0
+
+! Nb3Sn fit parameters
+Jc0 = 6600.0
+Tc0 = 16.7
+Bc0 = 26.25
+afit = 1.0	
+pfit = 1.52		
+
+! scaling of resistive losses
+scIFCU = 0.0   !turn off to start
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Real Constants for Coil 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! only 7 turns are powered -> named "turn1"
+nturns = 7   
+cmsel,s,turn1
+alls,below,area
+asum
+*get,across,area,all,area
+curdir = 1    ! 1=+z, -1=-z
+!R,2,across,nturns,lmag,curdir,1,   !set real constants
+R,2,across,nturns,fcond,fsc,curdir,Lmag   !set real constants
+Rmore,Lmag,RRR,Lp,feff,,TauMult
+Rmore,Jc0,Tc0,Bc0,afit,pfit,scIFCU
+
+! only 35 turns are powered -> named "turn2"
+nturns = 35   
+cmsel,s,turn2
+alls,below,area
+asum
+*get,across,area,all,area
+curdir = -1    ! 1=+z, -1=-z
+!R,22,across,nturns,lmag,curdir,1,   !set real constants
+R,22,across,nturns,fcond,fsc,curdir,Lmag   !set real constants
+Rmore,Lmag,RRR,Lp,feff,,TauMult
+Rmore,Jc0,Tc0,Bc0,afit,pfit,scIFCU
+
+
+! 56 turns are powered -> named "strand3"
+nturns = 56   
+cmsel,s,turn3
+alls,below,area
+asum
+*get,across,area,all,area
+curdir = 1    ! 1=+z, -1=-z
+!R,23,across,nturns,lmag,curdir,1,   !set real constants
+R,23,across,nturns,fcond,fsc,curdir,Lmag   !set real constants
+Rmore,Lmag,RRR,Lp,feff,,TauMult
+Rmore,Jc0,Tc0,Bc0,afit,pfit,scIFCU
+
+! 56 turns are powered -> named "strand4"
+nturns = 56   
+cmsel,s,turn4
+alls,below,area
+asum
+*get,across,area,all,area
+curdir = -1    ! 1=+z, -1=-z
+!R,24,across,nturns,lmag,curdir,1,   !set real constants
+R,24,across,nturns,fcond,fsc,curdir,Lmag   !set real constants
+Rmore,Lmag,RRR,Lp,feff,,TauMult
+Rmore,Jc0,Tc0,Bc0,afit,pfit,scIFCU
+
+!********** Real Constants ************************************************************************
+rdump = 32.05e-3
+
+cur1 = 1540.0e6*coilw*coilh/(2*nturns)    !set current based off of opera file (811.646 A)
+cur1 = 800
+
+
+
+!SymFac = 4*2*2*73  ! 1/4 of period, left/right, top/bot, 73 periods length = 1168
+SymFac = 4  ! left/right,top/bot
+
+R,3,cur1,0.0
+
+R,5,1.0     !symfactor is 1 (no symmetry)
+R,5,SymFac   
+R,6,rdump
+!*set,Rtot,rdump+SymFac*2*lmag*rhoc/(across)
+!*set,Rtot,rdump+2*lmag*rhoc/(across)
+*set,Rtot,rdump
+R,9,0,cur1*RTot,5.0/1000,cur1*RTot,5.1/1000,0,1000/1000,0    ! "dump res switch" 
+
+
+
+
+!**************************************************
+!********** Create Circuit  ***********************
+!**************************************************
+csys,0
+
+xcirc = 0
+ycirc = -10e-3
+dyy = 12e-3
+
+
+!make circuit nodes (location is arbitrary, connectivity is important)
+alls
+numcmp,node
+*get,nnode,node,,num,max
+numstr,node,nnode
+n,nnode+1,xcirc,ycirc
+n,nnode+2,xcirc+xsft,ycirc
+n,nnode+3,xcirc+xsft*2,ycirc
+n,nnode+4,xcirc+xsft*3,ycirc
+n,nnode+5,xcirc+xsft*4,ycirc
+n,nnode+6,xcirc+xsft*4,ycirc-dyy
+n,nnode+7,xcirc+xsft*3,ycirc-dyy
+n,nnode+8,xcirc+xsft,ycirc-dyy
+n,nnode+9,xcirc,ycirc-dyy
+n,nnode+10,0,0
+
+
+
+!define the circuit elements 
+
+!turn1 stranded source
+cmsel,s,turn1
+alls,below,area
+emodif,all,type,2
+emodif,all,real,2
+*get,nc1,node,0,nxth
+type,5    
+real,5
+alls
+E,nnode+1,nnode+2,nc1
+
+
+!turn2 stranded source
+cmsel,s,turn2
+alls,below,area
+emodif,all,type,2
+emodif,all,real,22
+*get,nc2,node,0,nxth
+type,5    
+real,5
+alls
+E,nnode+2,nnode+3,nc2
+
+!turn3 stranded source
+cmsel,s,turn3
+alls,below,area
+emodif,all,type,2
+emodif,all,real,23
+*get,nc3,node,0,nxth
+type,5    
+real,5
+alls
+E,nnode+3,nnode+4,nc3
+
+
+!turn4 stranded source
+cmsel,s,turn4
+alls,below,area
+emodif,all,type,2
+emodif,all,real,24
+*get,nc4,node,0,nxth
+type,5    
+real,5
+alls
+E,nnode+4,nnode+5,nc4
+
+
+
+
+
+type,9    !independent voltage source
+real,9
+!E,nnode+7,nnode+6,nnode+10
+E,nnode+6,nnode+7,nnode+10
+
+!type,3    !independent current source
+!real,3
+!E,nnode+6,nnode+5
+
+
+type,6    !resistor
+real,6
+E,nnode+8,nnode+9
+
+
+
+
+
+!cp to connect "wires"
+cp,next,volt,nnode+1,nnode+9
+cp,next,volt,nnode+5,nnode+6
+cp,next,volt,nnode+7,nnode+8
+
+
+
+
+!enforce stranded condition
+cmsel,s,turn1
+alls,below,area
+cp,next,emf,all
+cp,next,curr,all
+
+cmsel,s,turn2
+alls,below,area
+cp,next,emf,all
+cp,next,curr,all
+
+cmsel,s,turn3
+alls,below,area
+cp,next,emf,all
+cp,next,curr,all
+
+
+cmsel,s,turn4
+alls,below,area
+cp,next,emf,all
+cp,next,curr,all
+
+
+
+alls
+/graphics,full
+alls
+eplot
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! apply current density 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!cmsel,s,cond1
+!alls,below,area
+!bfe,all,Js,,0,0,Je
+!cmsel,s,cond2
+!alls,below,area
+!bfe,all,Js,,0,0,-Je
+
+
+!get rid of iron
+!cmsel,s,yoke
+!alls,below,area
+!emodif,all,mat,10
+
+
+!******************************************
+!********** B.C ***************************
+!******************************************
+
+!cp az across coil boundaries
+alls
+alls,below,area
+cpintf,az,1e-7
+
+! Set boundary conditions of the voltage
+alls
+!d,nnode+4,volt,0
+d,nnode+1,volt,0
+!d,nnode+6,volt,0
+
+!now swap ground to one side of the source
+!nsel,s,nnode+1
+!ddele,all,volt
+!d,nnode+6,volt,0
+
+! Set boundary conditions of the magnetic vector potential
+alls
+csys,11
+lsel,r,loc,x,rbc
+nsll,s,1
+d,all,az,0
+
+alls
+csys,0
+lsel,r,loc,x,xmax
+nsll,s,1
+d,all,az,0
+
+
+alls
+csys,0
+lsel,r,loc,y,0
+nsll,s,1
+d,all,az,0
+
+! Set yoke eddy coupling
+!cmsel,s,yoke
+!alls,below,area
+!cp,next,volt,all
+
+
+!**************************************************
+!****** Thermal Model *******
+!**************************************************
+
+! thermal for wire region
+et,4,plane77
+
+
+et,12,user101
+keyopt,12,1,1   ! use input homoginized properties
+keyopt,12,2,1   ! transfer from EMAG with binary
+keyopt,12,3,1   ! Nb3Sn superconductor
+keyopt,12,4,0   ! copper stabilizer             
+keyopt,12,5,0   ! G10 non-cond material
+keyopt,12,6,0   ! cucv NIST
+keyopt,12,7,0   ! cukxx NIST
+keyopt,12,9,0   ! nb3sn cv cudi
+keyopt,12,11,0   ! G10 cv nist
+
+
+!COIL PROPERTIES (mat11)  -> from Lorenzo
+mptemp,1,1.9
+densmix = 1.0    !since we are working with Cv
+cvCu = 500
+cvNb3sn = 250
+CvG10 = 0.0
+Cvmix = cvCu*fcond*(1-fsc) + cvNb3sn*fcond*fsc + cvG10*(1-fcond)
+kxxCu = 300
+kxxNb3Sn = 300
+kxxG10 = 0.01
+kxxmix = kxxCu*fcond*(1-fsc) + kxxNb3sn*fcond*fsc + kxxG10*(1-fcond)
+
+mp,dens,11,densmix     
+mp,kxx,11,kxxmix       
+mp,c,11,Cvmix         
+
+
+!set real constant (only emapping at this point -> to dummy value -> will be matched later)
+R,89,999999999999
+
+
+
+
+!generate duplicate mesh for non-air regions - include epoxy
+cmsel,s,cond
+alls,below,area
+agen,2,all,,,,,,,0
+cmsel,u,cond
+cm,tcond,area
+cm,treg,area
+
+cmsel,s,tcond
+alls,below,area
+emodif,all,mat,11
+emodif,all,type,12
+emodif,all,real,89
+
+
+!**************************************************
+!****** Define EMAG/THERMAL Interfaces  ***********
+!**************************************************
+
+cmsel,s,cond
+cmsel,a,tcond
+alls,below,area
+bfe,all,fvin,,1     !define interfaces on both elements
+
+
+
+
+
+!***********************************************************************
+!****** strand Element Mapping from Magnetic to Thermal  *******
+!***********************************************************************
+
+
+cmsel,s,turn1
+cmsel,a,turn2
+cmsel,a,turn3
+cmsel,a,turn4
+alls,below,area
+*get,enum,elem,,count
+
+cmsel,s,tturn1
+cmsel,a,tturn2
+cmsel,a,tturn3
+cmsel,a,tturn4
+alls,below,area
+*get,enumtest,elem,,count
+
+!add if to check that they are the same with error exit
+
+*dim,Emap,array,2,enum
+*dim,Ecent1,array,3,enum
+*dim,Ecent2,array,3,enum
+*dim,Et,array,2,enum
+
+
+cmsel,s,turn1
+cmsel,a,turn2
+cmsel,a,turn3
+cmsel,a,turn4
+alls,below,area
+!place all element #'s from magnetic into array
+*do,j,1,enum
+ *get,Emap(1,j),elem,0,nxth
+ esel,u,elem,,Emap(1,j)
+*enddo
+
+!find centroid of each thermal element
+*do,j,1,enum
+ esel,s,elem,,Emap(1,j)
+ *get,Ecent1(1,j),elem,Emap(1,j),cent,x
+ *get,Ecent1(2,j),elem,Emap(1,j),cent,y
+ *get,Ecent1(3,j),elem,Emap(1,j),cent,z
+*enddo
+
+
+
+cmsel,s,tturn1
+cmsel,a,tturn2
+cmsel,a,tturn3
+cmsel,a,tturn4
+alls,below,area
+!place all element #'s from thermal into array
+*do,j,1,enum
+ *get,Et(1,j),elem,0,nxth
+ esel,u,elem,,Et(1,j)
+*enddo
+
+!find centroid of each magnetic element
+*do,j,1,enum
+ esel,s,elem,,Et(1,j)
+ *get,Ecent2(1,j),elem,Et(1,j),cent,x
+ *get,Ecent2(2,j),elem,Et(1,j),cent,y
+ *get,Ecent2(3,j),elem,Et(1,j),cent,z
+*enddo
+
+
+!match centroids
+*set,tol,1e-7
+cnt = 100
+*do,j,1,enum
+  *do,i,1,enum
+	
+		*if,abs(Ecent2(1,j)-Ecent1(1,i)),LT,tol,then
+			*if,abs(Ecent2(2,j)-Ecent1(2,i)),LT,tol,then
+				*if,abs(Ecent2(3,j)-Ecent1(3,i)),LT,tol,then
+					r,cnt,Emap(1,i)
+					esel,s,elem,,Et(1,i)
+					emodif,all,real,cnt
+					cnt = cnt + 1
+				*endif
+			*endif
+		*endif
+		
+	*enddo
+*enddo
+
+
+save,presolve,db
+
+
+/input,04_solve_LR_stepping,txt,
+
+/eof
+
+
+!clip solution
+nv = 300
+
+/input,04_solve_LR_stepping,txt,
+
+
+
+
+

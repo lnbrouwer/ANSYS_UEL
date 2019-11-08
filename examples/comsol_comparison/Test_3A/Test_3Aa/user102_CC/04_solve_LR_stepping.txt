@@ -1,0 +1,200 @@
+
+
+!**************************************************
+!****** Solution (MFS)  ***************************
+!**************************************************
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Import Time Stepping
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+*set,nstep
+*dim,nstep,array,1,1
+*vread,nstep(1,1),pts_drive,dat,,1,1,,,
+(1(F13.0,1X))
+*set,nv,nstep(1,1)
+
+!only do first 100 steps
+!nv = 1400
+!nv = 1200
+!nv = 20
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Import Time Drive
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+*set,TTin
+*dim,TTin,array,3,nv
+
+!read in the time stepping (t,I0,B)
+*vread,TTin(1,1),LR_drive,txt,,nv,3,,,
+(3(F13.8,1X))
+
+
+
+finish
+alls
+/solu
+
+!mfclear,solu,1
+nropt,full
+
+!set initial condition for temp region
+cmsel,s,treg
+alls,below,area
+ic,all,temp,4.5
+
+
+!MFS solver settings	 
+alls
+mfan,on ! Activate ANSYS Multi-field solver analysis
+!mfel,1,1,2,5,6,9    ! Field #1 ET;s, Emag
+mfel,1,1,2,3,5,6,9   ! Field #1 ET;s, Emag
+mfel,2,4,12          ! Field #2 ET's, Thermal
+mfor,1,2             ! Field solution order
+
+
+! load transfer options
+mfvo,1,1,hgen,2 ! Transfer hgen from Emag to Thermal
+mfvo,1,2,temp,1 ! Transfer Temp from Thermal to Emag
+
+
+
+!EMAG analysis options (initial -> before decay)
+antype,trans
+nlgeom,on
+outres,all,all
+tref,4.5
+pivcheck,off
+nsubst,1
+cnvtol,curt,1e-1   !won't converge unless this is set
+cnvtol,vltg,1e-5
+timi,off,mag
+timi,off,elect
+mfcm,1,  ! Write Emag analysis options
+
+!Thermal analysis options
+antype,trans 
+nlgeom,on
+tref,4.5
+nsubst,1
+outres,all,last    !only write out final converged temp for each stagger
+mfcm,2, ! Write Thermal analysis options
+
+
+! set it up for no staggering, just passing at a given interval
+mfiter,1       !maximum number of stagger iterations, if 1 should set relaxation factor (mfrelax) to 1 (default is 10)
+mfrelax,all,1 
+!mfrelax,temp,1      !relaxation of transfered loads (default is 0.75)
+!mfrelax,hgen,1 
+!mfconv,1e-3    !convergence for load transfer (to exit stagger) (default is 1% = 0.01)
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! SOLUTION LOOP
+!!  --over LR background field and wire current from Matlab
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+alls
+tref,4.5 
+
+
+
+!/out,0000_soltrack,txt
+
+!loop over the time drive and solve at each time step (start at je =2 to avoid time 0)
+
+!CLIP SOLUTION
+nv = 30
+
+*do,je,2,nv
+	jeb = je-1
+	
+  !Turn on IFCC if decay is about to start 
+	*if,TTin(1,jeb),gt,0.004999,then
+
+
+
+	  !only need to change the first time
+	  *if,scIFCU,lt,0.5,then
+		  scIFCU = 1.0
+		  rmodif,2,18,scIFCU
+		  rmodif,22,18,scIFCU
+		  rmodif,23,18,scIFCU
+		  rmodif,24,18,scIFCU
+			
+
+			
+			autos,on 
+!  		deltim,1e-6,1e-6,1e-3,on 
+  		deltim,1e-5,1e-5,1e-3,on 
+  		nropt,full
+  		outres,all,last    !only write out final converged temp for each stagger
+!	  	cnvtol,heat,1e-1
+!	  	cnvtol,temp,1e-3
+	  	neqit,50
+	  	mfcm,2, ! Write Thermal analysis options
+		
+			timi,on,mag
+      timi,on,elect		
+      cnvtol,curt,,,,1e-5   !won't converge unless this is set
+      cnvtol,vltg,,,,1e-5		
+	  	nsubst,1
+	  	outres,all,all
+	  	mfcm,1, ! Write magnetic analysis options
+			
+    *else		
+	  *endif	
+
+		
+  *else
+		scIFCU = 0.0
+		rmodif,2,18,scIFCU
+		rmodif,22,18,scIFCU
+		rmodif,23,18,scIFCU
+		rmodif,24,18,scIFCU
+	*endif
+
+	
+	
+	!SET TIME STEP FROM FILE
+	mfti,TTin(1,je)    ! End time
+	
+  !now starts at 2nd second step 				
+  mfdt,TTin(1,je)-TTin(1,jeb)		
+		
+
+! check if this is needed -> should be in file		
+!	cnvtol,heat,1e-1
+	cnvtol,curt,1e-5   !won't converge unless this is set
+  cnvtol,vltg,1e-5
+	alls
+	solve
+
+*enddo
+
+!/out
+
+save
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! Post-Process
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/post26
+lines,10000    !avoid repeating headers < 1000 lines
+numvar,100    !set number of variables great than the default of 10
+In = 10     !start esol numbering at 10
+
+/input,07_ansys_coil_post26_circu_v2,txt
+
+
+/eof
+
+
+/input,03_ansys_sw_post26,txt
+/input,033_ansys_sw_post26_therm,txt
+

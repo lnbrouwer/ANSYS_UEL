@@ -1,0 +1,42 @@
+finish
+/post1
+alls
+plnsol,b,y
+plnsol,b,sum
+
+!/output,sol_track,txt
+
+csys,0
+*do,i,1,nstp
+	set,i
+	
+	
+  /input,001_sum_u102_flux,txt,
+  /input,002_sum_nmisc_M_HT0,txt
+	
+	I0%i% = dI*i
+	flux102sum%i% = flux102sum
+  Lflux%i% = flux102sum/I0%i%
+  MXave%i% = Mxave
+	Myave%i% = Myave
+	Bsave%i% = Bsave
+	PPtausum%i% = PPtausum
+	PPtausumALL%i% = PPtausumALL
+	flux102sum%i% = flux102sum
+	tm%i% = dt*i
+	cmsel,s,cond
+	alls,below,area
+	plnsol,b,sum
+	*get,Bmax%i%,plnsol,0,max
+	alls
+*enddo
+
+!/output,
+
+/DELETE,Mag_v_t,txt
+*cfopen,Mag_v_t,txt
+*do,i,1,nstp
+	*vwrite,I0%i%,flux102sum%i%,Lflux%i%,Bsave%i%,tm%i%,Mxave%i%,Myave%i%,PPtausum%i%,PPtausumALL%i%,Bmax%i%
+(10(ES16.7))
+*enddo
+*cfclose
